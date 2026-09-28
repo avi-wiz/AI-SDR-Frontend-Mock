@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/wizcommerce-design-system-remix-019df7db-e0c4-715b-add3-bb30e9d8a2f2/tokens.css">
+  <script src="_ds/wizcommerce-design-system-remix-019df7db-e0c4-715b-add3-bb30e9d8a2f2/_ds_bundle.js"></script>
+  <style>
+    body { margin: 0; background: var(--surface-page); }
+    a { color: var(--wiz-orange-600); text-decoration: none; }
+    a:hover { color: var(--wiz-orange-700); }
+  </style>
+</helmet>
+
+<div style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
+  <!-- Top Bar -->
+  <header style="display: flex; align-items: center; height: 56px; padding: 0 20px; background: var(--ink-900); color: var(--ink-0); flex-shrink: 0; gap: 16px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-right: 8px;">
+      <img src="assets/wiz-logo-white.png" alt="WizCommerce" style="height: 20px; width: auto;">
+      <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--ink-400);">/ SDR</span>
+    </div>
+    <div style="width: 1px; height: 24px; background: var(--ink-700);"></div>
+    <span style="font-family: var(--font-sans); font-size: 13px; color: var(--ink-300);">Brightwater Lighting Co.</span>
+    <div style="flex: 1;"></div>
+    <!-- Simulator badge -->
+    <div style="display: flex; align-items: center; gap: 8px; padding: 4px 14px; background: var(--wiz-orange-600); color: var(--ink-900);">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span style="font-family: var(--font-mono); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;">Simulator</span>
+    </div>
+    <div style="width: 1px; height: 24px; background: var(--ink-700);"></div>
+    <div style="font-family: var(--font-sans); font-size: 13px; color: var(--ink-400);">
+      Sim date: <span style="font-family: var(--font-sans); font-weight: 500; color: var(--wiz-orange-600);">{{ simDate }}</span>
+    </div>
+  </header>
+
+  <div style="display: flex; flex: 1; overflow: hidden;">
+    <!-- Sidebar -->
+    <nav style="width: 220px; flex-shrink: 0; background: var(--ink-0); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; padding: 12px 0;">
+      <sc-for list="{{ simNav }}" as="sn" hint-placeholder-count="5">
+        <button style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 20px; border: none; cursor: pointer; font-family: var(--font-sans); font-size: 14px; text-align: left; transition: background 120ms; {{ sn.style }}" style-hover="background: var(--ink-50);" onClick="{{ sn.onClick }}">
+          <span style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;">{{ sn.icon }}</span>
+          <span style="flex: 1;">{{ sn.label }}</span>
+        </button>
+      </sc-for>
+      <div style="flex: 1;"></div>
+      <div style="padding: 12px 16px;">
+        <button style="width: 100%; height: 36px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-50);" onClick="{{ exitSimulator }}">← Exit Simulator</button>
+      </div>
+    </nav>
+
+    <!-- S1: Control Panel -->
+    <sc-if value="{{ showControl }}" hint-placeholder-val="{{ true }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Control Panel</h1>
+      <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0 0 28px;">Advance the simulation clock and watch the agent respond.</p>
+
+      <!-- Current state -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border-subtle); border: 1px solid var(--border-subtle); margin-bottom: 28px;">
+        <div style="background: var(--ink-0); padding: 20px;">
+          <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Sim date</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 24px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--wiz-orange-600);">{{ simDate }}</div>
+        </div>
+        <div style="background: var(--ink-0); padding: 20px;">
+          <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Days elapsed</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 24px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ daysElapsed }}</div>
+        </div>
+        <div style="background: var(--ink-0); padding: 20px;">
+          <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Total sends</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 24px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ totalSends }}</div>
+        </div>
+        <div style="background: var(--ink-0); padding: 20px;">
+          <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Active enrolments</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 24px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ activeEnrolments }}</div>
+        </div>
+      </div>
+
+      <!-- Time controls -->
+      <div style="margin-bottom: 28px;">
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Advance time</h2>
+        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <button style="height: 48px; padding: 0 24px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;" style-hover="background: var(--ink-700);" onClick="{{ advanceDay }}">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            +1 Day
+          </button>
+          <button style="height: 48px; padding: 0 24px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;" style-hover="background: var(--ink-50);" onClick="{{ advanceWeek }}">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4l4 4-4 4M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            +1 Week
+          </button>
+          <button style="height: 48px; padding: 0 24px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer;" style-hover="background: var(--ink-50);" onClick="{{ toggleAutoplay }}">{{ autoplayLabel }}</button>
+        </div>
+      </div>
+
+      <!-- Tick Summary -->
+      <div>
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Last tick summary</h2>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+          <sc-for list="{{ tickSummary }}" as="ts" hint-placeholder-count="6">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="width: 8px; height: 8px; flex-shrink: 0; {{ ts.dotStyle }}"></div>
+              <div style="flex: 1;">
+                <span style="font-family: var(--font-sans); font-size: 14px; color: var(--text-primary);">{{ ts.action }}</span>
+              </div>
+              <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--text-muted);">{{ ts.count }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- S2: Inject Events -->
+    <sc-if value="{{ showInject }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Inject Events</h1>
+      <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0 0 28px;">Fire synthetic events to trigger plays during a live demo.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <sc-for list="{{ injectEvents }}" as="ie" hint-placeholder-count="6">
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 24px;">
+            <div style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; color: var(--text-primary); margin-bottom: 6px;">{{ ie.name }}</div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); line-height: 1.45; margin-bottom: 16px;">{{ ie.description }}</div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <button style="height: 40px; padding: 0 20px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer;" style-hover="background: var(--ink-700);" onClick="{{ ie.onFire }}">{{ ie.btnLabel }}</button>
+              <span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ ie.play }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- S3: Scenarios -->
+    <sc-if value="{{ showScenarios }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;">
+        <div>
+          <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Scenarios</h1>
+          <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0;">Pass/fail expectations for each scenario in the test suite.</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-family: var(--font-sans); font-weight: 500; font-size: 15px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--text-primary);">{{ scenariosPassed }} / {{ scenariosTotal }}</span>
+          <span style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">passing</span>
+        </div>
+      </div>
+
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+        <div style="display: grid; grid-template-columns: 2.5fr 1fr 1fr 80px; padding: 10px 20px; border-bottom: 1px solid var(--border-subtle); background: var(--ink-50);">
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Scenario</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Play</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Expected</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Result</div>
+        </div>
+        <sc-for list="{{ scenarios }}" as="sc" hint-placeholder-count="10">
+          <div style="display: grid; grid-template-columns: 2.5fr 1fr 1fr 80px; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle); align-items: center;">
+            <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-primary);">{{ sc.name }}</div>
+            <div><span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ sc.play }}</span></div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">{{ sc.expected }}</div>
+            <div><span style="padding: 3px 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 500; {{ sc.resultStyle }}">{{ sc.result }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- S4: World Settings -->
+    <sc-if value="{{ showWorld }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">World Settings</h1>
+      <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0 0 28px;">Configure the synthetic world — lift rates and buyer behaviour.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <!-- Lift per play -->
+        <div>
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Injected lift per play</h2>
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+            <sc-for list="{{ liftSettings }}" as="ls" hint-placeholder-count="5">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle);">
+                <span style="font-family: var(--font-sans); font-size: 14px; color: var(--text-primary);">{{ ls.play }}</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <button style="width: 24px; height: 24px; background: var(--ink-0); border: 1.5px solid var(--ink-900); font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center;" style-hover="background: var(--ink-50);" onClick="{{ ls.onDown }}">−</button>
+                  <span style="font-family: var(--font-sans); font-weight: 500; font-size: 15px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; min-width: 40px; text-align: center; color: var(--wiz-orange-600);">{{ ls.value }}</span>
+                  <button style="width: 24px; height: 24px; background: var(--ink-0); border: 1.5px solid var(--ink-900); font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center;" style-hover="background: var(--ink-50);" onClick="{{ ls.onUp }}">+</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Buyer persona mix -->
+        <div>
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Buyer persona mix</h2>
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+            <sc-for list="{{ personaMix }}" as="pm" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle);">
+                <div>
+                  <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ pm.name }}</div>
+                  <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ pm.description }}</div>
+                </div>
+                <span style="font-family: var(--font-sans); font-weight: 500; font-size: 15px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ pm.pct }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- S5: Under the Hood -->
+    <sc-if value="{{ showHood }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Under the Hood</h1>
+      <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0 0 28px;">Developer tools and observability for the simulation environment.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px;">
+        <sc-for list="{{ devTools }}" as="dt" hint-placeholder-count="4">
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 24px; cursor: pointer; transition: border-color 120ms;" style-hover="border-color: var(--ink-400);">
+            <div style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; color: var(--text-primary); margin-bottom: 4px;">{{ dt.name }}</div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">{{ dt.description }}</div>
+            <div style="font-family: var(--font-mono); font-size: 12px; color: var(--wiz-orange-600); margin-top: 8px;">{{ dt.url }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- Token Usage -->
+      <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">LLM token usage</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border-subtle); border: 1px solid var(--border-subtle); margin-bottom: 28px;">
+        <sc-for list="{{ tokenStats }}" as="tk" hint-placeholder-count="4">
+          <div style="background: var(--ink-0); padding: 20px;">
+            <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">{{ tk.label }}</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 24px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ tk.value }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- Event Bus -->
+      <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Recent event bus activity</h2>
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+        <sc-for list="{{ eventBus }}" as="eb" hint-placeholder-count="6">
+          <div style="display: flex; align-items: center; gap: 16px; padding: 10px 20px; border-bottom: 1px solid var(--border-subtle);">
+            <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); min-width: 80px;">{{ eb.time }}</span>
+            <span style="font-family: var(--font-mono); font-size: 12px; color: var(--wiz-orange-600);">{{ eb.type }}</span>
+            <span style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); flex: 1;">{{ eb.detail }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+class Component extends DCLogic {
+  state = {
+    activeTab: 'control', simDay: 0, autoplay: false,
+    firedEvents: {},
+    lifts: { prelapse: 12, openquote: 8, sku: 10, speed: 15, winback: 5 },
+  };
+
+  renderVals() {
+    const { activeTab, simDay, autoplay, firedEvents } = this.state;
+    const baseDate = new Date(2026, 8, 28);
+    const simDate = new Date(baseDate.getTime() + simDay * 86400000);
+    const dateStr = simDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+    const navDefs = [
+      { id: 'control', label: 'Control Panel', icon: 'control' },
+      { id: 'inject', label: 'Inject Events', icon: 'inject' },
+      { id: 'scenarios', label: 'Scenarios', icon: 'scenarios' },
+      { id: 'world', label: 'World Settings', icon: 'world' },
+      { id: 'hood', label: 'Under the Hood', icon: 'hood' },
+    ];
+    const simNav = navDefs.map(n => {
+      const isActive = n.id === activeTab;
+      return {
+        ...n,
+        onClick: () => this.setState({ activeTab: n.id }),
+        label: React.createElement('span', { style: { color: isActive ? 'var(--ink-900)' : 'var(--text-secondary)', fontWeight: isActive ? 500 : 400 } }, n.label),
+        icon: React.createElement('span', { dangerouslySetInnerHTML: { __html: this.icon(n.icon) }, style: { display: 'flex', alignItems: 'center', justifyContent: 'center', color: isActive ? 'var(--wiz-orange-600)' : 'var(--text-muted)' } }),
+        style: isActive ? 'background: var(--ink-50); border-left: 2px solid var(--wiz-orange-600); padding-left: 18px;' : 'background: transparent; border-left: 2px solid transparent; padding-left: 18px;',
+      };
+    });
+
+    const sends = 14 + simDay * 8;
+    const enrolments = 42 + simDay * 3;
+
+    return {
+      exitSimulator: () => { window.location = 'WizCRM Sales Agents.dc.html'; },
+      simNav,
+      simDate: dateStr,
+      showControl: activeTab === 'control',
+      showInject: activeTab === 'inject',
+      showScenarios: activeTab === 'scenarios',
+      showWorld: activeTab === 'world',
+      showHood: activeTab === 'hood',
+
+      // S1
+      daysElapsed: String(simDay),
+      totalSends: String(sends),
+      activeEnrolments: String(enrolments),
+      advanceDay: () => this.setState(s => ({ simDay: s.simDay + 1 })),
+      advanceWeek: () => this.setState(s => ({ simDay: s.simDay + 7 })),
+      autoplayLabel: autoplay ? '⏸ Stop autoplay' : '▶ Autoplay',
+      toggleAutoplay: () => {
+        if (!this.state.autoplay) {
+          this._autoTimer = setInterval(() => this.setState(s => ({ simDay: s.simDay + 1 })), 1500);
+          this.setState({ autoplay: true });
+        } else {
+          clearInterval(this._autoTimer);
+          this.setState({ autoplay: false });
+        }
+      },
+      tickSummary: [
+        { action: 'Audience evaluated across 5 plays', count: String(156 + simDay * 4), dotStyle: 'background: var(--ink-400);' },
+        { action: 'New enrolments', count: String(3 + (simDay % 4)), dotStyle: 'background: var(--ink-900);' },
+        { action: 'Emails sent (autonomous)', count: String(8 + (simDay % 6)), dotStyle: 'background: var(--ink-900);' },
+        { action: 'Drafts created for approval', count: String(4 + (simDay % 3)), dotStyle: 'background: var(--wiz-orange-600);' },
+        { action: 'Replies handled autonomously', count: String(2 + (simDay % 4)), dotStyle: 'background: var(--ink-400);' },
+        { action: 'Suppressed (DNC, frequency, recent order)', count: String(6 + (simDay % 5)), dotStyle: 'background: var(--ink-300);' },
+        { action: 'Exited (order placed, completed sequence)', count: String(1 + (simDay % 3)), dotStyle: 'background: var(--ink-400);' },
+      ],
+
+      // S2
+      injectEvents: [
+        { name: 'New lead signup', description: 'A new wholesale buyer registers on the portal. Triggers Speed-to-Lead.', play: 'Speed-to-Lead', btnLabel: firedEvents.lead ? '✓ Fired' : 'Fire event', onFire: () => this.setState(s => ({ firedEvents: { ...s.firedEvents, lead: true } })) },
+        { name: 'Cart abandoned', description: 'A buyer adds items to cart and leaves without ordering. Triggers Abandoned Cart.', play: 'Abandoned Cart', btnLabel: firedEvents.cart ? '✓ Fired' : 'Fire event', onFire: () => this.setState(s => ({ firedEvents: { ...s.firedEvents, cart: true } })) },
+        { name: 'Item restocked', description: 'A previously out-of-stock SKU receives new inventory. Triggers Back-in-Stock.', play: 'Back-in-Stock', btnLabel: firedEvents.restock ? '✓ Fired' : 'Fire event', onFire: () => this.setState(s => ({ firedEvents: { ...s.firedEvents, restock: true } })) },
+        { name: 'Buyer replies "interested"', description: 'A buyer replies positively to an agent email. Creates a handoff with pre-drafted reply.', play: 'Any active', btnLabel: firedEvents.reply ? '✓ Fired' : 'Fire event', onFire: () => this.setState(s => ({ firedEvents: { ...s.firedEvents, reply: true } })) },
+        { name: 'Buyer replies "out of office"', description: 'A buyer sends an OOO reply. Agent reschedules automatically.', play: 'Any active', btnLabel: firedEvents.ooo ? '✓ Fired' : 'Fire event', onFire: () => this.setState(s => ({ firedEvents: { ...s.firedEvents, ooo: true } })) },
+        { name: 'Order placed', description: 'A buyer places an order. Any active play for this contact exits immediately.', play: 'Any active', btnLabel: firedEvents.order ? '✓ Fired' : 'Fire event', onFire: () => this.setState(s => ({ firedEvents: { ...s.firedEvents, order: true } })) },
+      ],
+
+      // S3
+      scenariosPassed: '14',
+      scenariosTotal: '16',
+      scenarios: [
+        { name: 'Pre-Lapse fires at 1.25× cadence ratio', play: 'Pre-Lapse', expected: 'Enrol + Email 1', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'Frequency cap prevents 3rd email in 7 days', play: 'All', expected: 'Suppress', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'Higher-priority play pre-empts lower', play: 'Arbitration', expected: 'Open Quote wins', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'OOO reply reschedules next step', play: 'Any', expected: 'Pause + resume', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'Unsubscribe suppresses across all plays', play: 'All', expected: 'Global suppress', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'Order exit stops mid-sequence', play: 'Pre-Lapse', expected: 'Exit at step 2', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'DNC contact never receives email', play: 'All', expected: 'Suppress', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'L2 draft requires approval before send', play: 'Open Quote', expected: 'Draft created', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'L3 auto-sends with audit sample', play: 'Pre-Lapse', expected: 'Auto + 5% audit', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'Stale live data suppresses claim', play: 'Pre-Lapse', expected: 'Drop stock claim', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: '>2 fallbacks kills the step', play: 'Any', expected: 'Step suppressed', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'Complaint triggers auto-demotion', play: 'All', expected: 'Drop to L2', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'Holdout contacts never enrolled', play: 'All', expected: '10% excluded', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'Restricted facts never rendered in email', play: 'All', expected: 'No restricted data', result: 'Pass', resultStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'Speed-to-Lead fires within 5 minutes', play: 'Speed-to-Lead', expected: '≤5 min', result: 'Pending', resultStyle: 'border: 1px solid var(--border-default); color: var(--text-muted);' },
+        { name: 'Winback offer matches registry exactly', play: 'Winback', expected: 'Exact terms', result: 'Pending', resultStyle: 'border: 1px solid var(--border-default); color: var(--text-muted);' },
+      ],
+
+      // S4
+      liftSettings: (() => {
+        const keys = ['prelapse', 'openquote', 'sku', 'speed', 'winback'];
+        const labels = ['Pre-Lapse Cadence', 'Open Quote Follow-up', 'SKU Replenishment', 'Speed-to-Lead', 'Winback 90–180'];
+        return keys.map((k, i) => ({
+          play: labels[i],
+          value: this.state.lifts[k] + '%',
+          onUp: () => this.setState(s => ({ lifts: { ...s.lifts, [k]: Math.min(50, s.lifts[k] + 1) } })),
+          onDown: () => this.setState(s => ({ lifts: { ...s.lifts, [k]: Math.max(0, s.lifts[k] - 1) } })),
+        }));
+      })(),
+      personaMix: [
+        { name: 'Active buyer', description: 'Orders regularly, responds to emails', pct: '40%' },
+        { name: 'Occasional buyer', description: 'Orders 2–3× per year, sometimes ignores emails', pct: '30%' },
+        { name: 'Lapsed buyer', description: 'Hasn\'t ordered in 6+ months', pct: '20%' },
+        { name: 'New lead', description: 'Just signed up, no orders yet', pct: '10%' },
+      ],
+
+      // S5
+      devTools: [
+        { name: 'Mailpit', description: 'View all sent emails in the simulation inbox', url: 'localhost:8025' },
+        { name: 'Jaeger', description: 'Distributed traces for every agent decision', url: 'localhost:16686' },
+        { name: 'Event Bus Browser', description: 'Real-time stream of all events in the system', url: 'localhost:9090/events' },
+        { name: 'Temporal UI', description: 'Durable workflow executions and history', url: 'localhost:8088' },
+      ],
+      tokenStats: [
+        { label: 'Total tokens', value: (12400 + simDay * 2800).toLocaleString() },
+        { label: 'Cache hit rate', value: '68%' },
+        { label: 'Avg per email', value: '~320' },
+        { label: 'Model version', value: 'claude-3.5-v2' },
+      ],
+      eventBus: [
+        { time: '09:42:18', type: 'email.sent', detail: 'Pre-Lapse → Meridian Home Décor (auto, L3)' },
+        { time: '09:42:16', type: 'grounding.pass', detail: 'All 4 claims verified for Meridian draft' },
+        { time: '09:42:14', type: 'compile.done', detail: 'Pre-Lapse E1 compiled in 1.2s (320 tokens)' },
+        { time: '09:41:58', type: 'audience.eval', detail: 'Pre-Lapse schedule: 156 matched, 42 enrolled' },
+        { time: '09:18:22', type: 'reply.handled', detail: 'OOO → Beacon & Birch, rescheduled to Oct 14' },
+        { time: '09:18:20', type: 'reply.classified', detail: 'Beacon & Birch reply: ooo (confidence 0.97)' },
+        { time: '08:55:10', type: 'email.sent', detail: 'Open Quote → Artisan Wholesale (approved by Dana)' },
+        { time: '08:30:04', type: 'suppress', detail: 'Golden State Imports: recent order (Sep 27)' },
+      ],
+    };
+  }
+
+  icon(name) {
+    const icons = {
+      control: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M10 6v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      inject: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v14M3 10h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+      scenarios: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      world: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M3 10h14M10 3c-2 2.5-2 11.5 0 14M10 3c2 2.5 2 11.5 0 14" stroke="currentColor" stroke-width="1.5"/></svg>',
+      hood: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 7l4-4h4l4 4v4l-4 4H8l-4-4V7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10" cy="10" r="2" stroke="currentColor" stroke-width="1.5"/></svg>',
+    };
+    return icons[name] || '';
+  }
+
+  componentWillUnmount() {
+    if (this._autoTimer) clearInterval(this._autoTimer);
+  }
+}
+</script>
+</body>
+</html>

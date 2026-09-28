@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/wizcommerce-design-system-remix-019df7db-e0c4-715b-add3-bb30e9d8a2f2/tokens.css">
+  <script src="_ds/wizcommerce-design-system-remix-019df7db-e0c4-715b-add3-bb30e9d8a2f2/_ds_bundle.js"></script>
+  <style>
+    body { margin: 0; background: var(--surface-page); }
+    a { color: var(--wiz-orange-600); text-decoration: none; }
+    a:hover { color: var(--wiz-orange-700); }
+  </style>
+</helmet>
+
+<div style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
+  <!-- Top Bar -->
+  <header style="display: flex; align-items: center; height: 56px; padding: 0 20px; background: var(--ink-900); color: var(--ink-0); flex-shrink: 0; gap: 16px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-right: 8px;">
+      <img src="assets/wiz-logo-white.png" alt="WizCommerce" style="height: 20px; width: auto;">
+      <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--ink-400);">/ SDR</span>
+    </div>
+    <div style="width: 1px; height: 24px; background: var(--ink-700);"></div>
+    <button style="display: flex; align-items: center; gap: 6px; background: none; border: none; color: var(--ink-300); font-family: var(--font-sans); font-size: 13px; cursor: pointer; padding: 4px 8px;" style-hover="background: var(--ink-800); color: var(--ink-100);">
+      <span>Brightwater Lighting Co.</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div style="flex: 1;"></div>
+    <div style="font-family: var(--font-sans); font-size: 12px; color: var(--ink-500); display: flex; align-items: center; gap: 6px;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="0" stroke="currentColor" stroke-width="1.2"/><path d="M1 5.5h12" stroke="currentColor" stroke-width="1.2"/><path d="M4 1v2M10 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Sep 28, 2026
+    </div>
+    <div style="width: 1px; height: 24px; background: var(--ink-700);"></div>
+    <button style="position: relative; background: none; border: none; color: var(--ink-400); cursor: pointer; padding: 6px;" style-hover="color: var(--ink-100);" onClick="{{ toggleNotifs }}">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2a5 5 0 00-5 5v3l-1.5 2.5h13L15 10V7a5 5 0 00-5-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 16.5a2 2 0 004 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span style="position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; background: var(--wiz-orange-600); color: var(--ink-900); font-family: var(--font-sans); font-weight: 600; font-size: 10px; display: flex; align-items: center; justify-content: center;">4</span>
+    </button>
+    <!-- Notifications Dropdown -->
+    <sc-if value="{{ showNotifs }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; top: 52px; right: 120px; width: 360px; border: 1px solid var(--border-subtle); background: var(--ink-0); z-index: 100; box-shadow: var(--shadow-lifted);">
+        <div style="padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-family: var(--font-sans); font-weight: 600; font-size: 14px; color: var(--text-primary);">Notifications</span>
+          <button style="font-family: var(--font-sans); font-size: 12px; color: var(--wiz-orange-600); background: none; border: none; cursor: pointer;" style-hover="color: var(--wiz-orange-700);">Mark all read</button>
+        </div>
+        <sc-for list="{{ adminNotifs }}" as="an" hint-placeholder-count="4">
+          <div style="padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); cursor: pointer; transition: background 120ms;" style-hover="background: var(--ink-50);" onClick="{{ an.onClick }}">
+            <div style="display: flex; align-items: flex-start; gap: 8px;">
+              <div style="width: 6px; height: 6px; margin-top: 6px; flex-shrink: 0; background: {{ an.dotColor }};"></div>
+              <div>
+                <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-primary); line-height: 1.4;">{{ an.text }}</div>
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 2px;">{{ an.time }}</div>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <div style="width: 1px; height: 24px; background: var(--ink-700);"></div>
+    <button style="display: flex; align-items: center; gap: 8px; background: none; border: none; color: var(--ink-0); cursor: pointer; padding: 4px 8px; font-family: var(--font-sans); font-size: 13px;" style-hover="background: var(--ink-800);">
+      <div style="width: 28px; height: 28px; background: var(--ink-700); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px; color: var(--ink-0);">JM</div>
+      <span>Jordan Mitchell</span>
+      <span style="padding: 2px 6px; font-family: var(--font-mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; background: var(--ink-700); color: var(--ink-300);">Admin</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </header>
+
+  <div style="display: flex; flex: 1; overflow: hidden;">
+    <!-- Sidebar -->
+    <nav style="width: 240px; flex-shrink: 0; background: var(--ink-0); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; padding: 12px 0; overflow-y: auto;">
+      <sc-for list="{{ navItems }}" as="nav" hint-placeholder-count="10">
+        <button style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 20px; border: none; cursor: pointer; font-family: var(--font-sans); font-size: 14px; text-align: left; transition: background 120ms; {{ nav.style }}" style-hover="background: var(--ink-50);" onClick="{{ nav.onClick }}">
+          <span style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;">{{ nav.icon }}</span>
+          <span style="flex: 1;">{{ nav.label }}</span>
+          <sc-if value="{{ nav.badge }}">
+            <span style="min-width: 20px; height: 20px; padding: 0 6px; background: var(--ink-900); color: var(--ink-0); font-family: var(--font-sans); font-weight: 600; font-size: 11px; display: flex; align-items: center; justify-content: center;">{{ nav.badge }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+      <div style="flex: 1;"></div>
+      <div style="margin: 8px 16px;">
+        <button style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--border-default); background: var(--ink-50); font-family: var(--font-mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); cursor: pointer; width: 100%;" style-hover="border-color: var(--ink-400); color: var(--text-secondary);" onClick="{{ goToSimulator }}">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Simulator
+        </button>
+        <button style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--border-default); background: var(--ink-0); font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); cursor: pointer; width: 100%; margin-top: 8px;"
+                style-hover="border-color: var(--ink-400); color: var(--text-secondary);"
+                onClick="{{ goToRep }}">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Switch to Rep view
+        </button>
+      </div>
+    </nav>
+
+    <!-- A1: Overview Dashboard -->
+    <sc-if value="{{ showOverview }}" hint-placeholder-val="{{ true }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Overview</h1>
+      <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0 0 28px;">Sales Agents performance across your team.</p>
+      <!-- Headline Numbers -->
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border-subtle); border: 1px solid var(--border-subtle); margin-bottom: 32px;">
+        <sc-for list="{{ overviewStats }}" as="os" hint-placeholder-count="5">
+          <div style="background: var(--ink-0); padding: 20px;">
+            <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 10px;">{{ os.label }}</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 32px; letter-spacing: -0.01em; color: {{ os.color }}; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ os.value }}</div>
+            <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 4px;">{{ os.sub }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <!-- Two columns -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+        <!-- Plays Live -->
+        <div>
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Plays live</h2>
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+            <sc-for list="{{ overviewPlays }}" as="op" hint-placeholder-count="5">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); cursor: pointer; transition: background 120ms;" style-hover="background: var(--ink-50);" onClick="{{ op.onClick }}">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="padding: 3px 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 500; {{ op.statusStyle }}">{{ op.status }}</span>
+                  <span style="font-family: var(--font-sans); font-size: 14px; color: var(--text-primary);">{{ op.name }}</span>
+                </div>
+                <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--text-primary);">{{ op.revenue }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <!-- Team Activity -->
+        <div>
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Team this week</h2>
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+            <sc-for list="{{ overviewTeam }}" as="ot" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle);">
+                <div>
+                  <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ ot.rep }}</div>
+                  <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ ot.detail }}</div>
+                </div>
+                <div style="display: flex; gap: 16px;">
+                  <div style="text-align: right;">
+                    <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ ot.sent }}</div>
+                    <div style="font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">sent</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ ot.drafts }}</div>
+                    <div style="font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">pending</div>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <!-- Deliverability / Handoff trend -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div>
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Deliverability health</h2>
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 20px;">
+            <sc-for list="{{ delivHealth }}" as="dh" hint-placeholder-count="3">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-subtle);">
+                <span style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);">{{ dh.label }}</span>
+                <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ dh.value }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Handoff rate trend</h2>
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 20px;">
+            <div style="display: flex; align-items: flex-end; gap: 8px; height: 100px;">
+              <sc-for list="{{ handoffTrend }}" as="ht" hint-placeholder-count="6">
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 100%; background: var(--ink-200); height: {{ ht.height }};">
+                    <div style="width: 100%; background: var(--ink-900); height: {{ ht.fillHeight }};"></div>
+                  </div>
+                  <span style="font-family: var(--font-sans); font-size: 10px; color: var(--text-muted);">{{ ht.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 12px;">Trending down — 28% → 18% over 6 weeks</div>
+          </div>
+        </div>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- A2: Play Library -->
+    <sc-if value="{{ showPlayLibrary }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;">
+        <div>
+          <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Play Library</h1>
+          <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0;">Curated sales plays for your team. Enable, configure, and monitor.</p>
+        </div>
+        <div style="display: flex; gap: 12px; font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">
+          <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">5 live · 3 ready · 8 blocked</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+        <sc-for list="{{ playLibrary }}" as="pl" hint-placeholder-count="9">
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); cursor: pointer; transition: border-color 120ms; display: flex; flex-direction: column;" style-hover="border-color: var(--ink-400);" onClick="{{ pl.onClick }}">
+            <div style="padding: 20px 20px 12px; flex: 1;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span style="padding: 3px 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 500; {{ pl.statusStyle }}">{{ pl.status }}</span>
+                <span style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);">{{ pl.category }}</span>
+              </div>
+              <div style="font-family: var(--font-sans); font-weight: 600; font-size: 14px; color: var(--text-primary); margin-bottom: 6px;">{{ pl.name }}</div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); line-height: 1.45;">{{ pl.description }}</div>
+              <sc-if value="{{ pl.blockedReason }}">
+                <div style="margin-top: 8px; padding: 8px 12px; background: var(--ink-50); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">{{ pl.blockedReason }}</div>
+              </sc-if>
+            </div>
+            <sc-if value="{{ pl.metric }}">
+              <div style="padding: 10px 20px; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ pl.metricLabel }}</span>
+                <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ pl.metric }}</span>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- A3: Play Detail (admin) -->
+    <sc-if value="{{ showAdminPlayDetail }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <button style="display: flex; align-items: center; gap: 6px; background: none; border: none; font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); cursor: pointer; padding: 0; margin-bottom: 20px;" style-hover="color: var(--text-secondary);" onClick="{{ goBackToLibrary }}">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to Play Library
+      </button>
+      <!-- Play header -->
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); margin-bottom: 24px;">
+        <div style="padding: 24px;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+            <div>
+              <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">Replenishment</div>
+              <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Catch customers before they slip away</h1>
+              <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin: 0; max-width: 640px;">Monitors each account's reorder rhythm. When they pass 1.25× their usual interval, the play sends up to 3 emails escalating from familiar products to stock urgency, then hands off.</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <span style="padding: 4px 12px; font-family: var(--font-sans); font-size: 12px; font-weight: 500; {{ playStatusStyle }}">{{ playStatusLabel }}</span>
+              <button style="height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-50);" onClick="{{ togglePlayEnabled }}">{{ togglePlayLabel }}</button>
+            </div>
+          </div>
+        </div>
+        <!-- Results -->
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border-subtle); border-top: 1px solid var(--border-subtle);">
+          <div style="background: var(--ink-0); padding: 14px 16px;">
+            <div style="font-family: var(--font-mono); font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">Enrolled</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 20px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">42</div>
+          </div>
+          <div style="background: var(--ink-0); padding: 14px 16px;">
+            <div style="font-family: var(--font-mono); font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">Sent this month</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 20px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">128</div>
+          </div>
+          <div style="background: var(--ink-0); padding: 14px 16px;">
+            <div style="font-family: var(--font-mono); font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">Conversion</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 20px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">14.2%</div>
+          </div>
+          <div style="background: var(--ink-0); padding: 14px 16px;">
+            <div style="font-family: var(--font-mono); font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">Incremental rev</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 20px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--wiz-orange-600);">$18,420</div>
+          </div>
+          <div style="background: var(--ink-0); padding: 14px 16px;">
+            <div style="font-family: var(--font-mono); font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">Handoff rate</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 20px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">18%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Parameters -->
+      <div style="margin-bottom: 24px;">
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Parameters</h2>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 24px;">
+          <sc-for list="{{ adminPlayParams }}" as="param" hint-placeholder-count="2">
+            <div style="margin-bottom: 20px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <div>
+                  <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ param.label }}</div>
+                  <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ param.help }}</div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <button style="width: 28px; height: 28px; background: var(--ink-0); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;" style-hover="background: var(--ink-50);" onClick="{{ param.onDecrease }}">−</button>
+                  <div style="font-family: var(--font-sans); font-weight: 500; font-size: 18px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--wiz-orange-600); min-width: 48px; text-align: center;">{{ param.value }}</div>
+                  <button style="width: 28px; height: 28px; background: var(--ink-0); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;" style-hover="background: var(--ink-50);" onClick="{{ param.onIncrease }}">+</button>
+                </div>
+              </div>
+              <div style="position: relative; height: 6px; background: var(--ink-100);">
+                <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; background: var(--ink-200);"></div>
+                <div style="position: absolute; left: {{ param.thumbPos }}; top: -5px; width: 16px; height: 16px; background: var(--ink-900);"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 6px;">
+                <span style="font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ param.min }}</span>
+                <span style="font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ param.max }}</span>
+              </div>
+            </div>
+          </sc-for>
+          <!-- Audience count updates live -->
+          <div style="padding: 12px 16px; border: 1px solid var(--border-default); background: var(--ink-50); display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="var(--wiz-orange-600)" stroke-width="1.5"/><path d="M8 5v3l2 1.5" stroke="var(--wiz-orange-600)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);">Audience updates live as you adjust — <span style="font-weight: 500; color: var(--wiz-orange-600);">{{ audienceCount }}</span> contacts qualify now</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audience preview -->
+      <div style="margin-bottom: 24px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0;">Audience preview</h2>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-family: var(--font-sans); font-weight: 500; font-size: 24px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--wiz-orange-600);">214</span>
+            <span style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">contacts would qualify today</span>
+          </div>
+        </div>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+          <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr; padding: 10px 20px; border-bottom: 1px solid var(--border-subtle); background: var(--ink-50);">
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Account</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Contact</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Cadence ratio</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Rep</div>
+          </div>
+          <sc-for list="{{ audiencePreview }}" as="ap" hint-placeholder-count="5">
+            <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); align-items: center;">
+              <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-primary);">{{ ap.account }}</div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);">{{ ap.contact }}</div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ ap.ratio }}</div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">{{ ap.rep }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- Enrolment funnel -->
+      <div>
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Enrolment funnel</h2>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 24px;">
+          <div style="display: flex; gap: 0;">
+            <sc-for list="{{ enrolmentFunnel }}" as="ef" hint-placeholder-count="6">
+              <div style="flex: 1; text-align: center;">
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 24px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--text-primary); margin-bottom: 4px;">{{ ef.count }}</div>
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ ef.label }}</div>
+                <sc-if value="{{ ef.drop }}">
+                  <div style="font-family: var(--font-sans); font-size: 11px; color: var(--text-faint); margin-top: 2px;">{{ ef.drop }}</div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- A4: Autonomy Matrix -->
+    <sc-if value="{{ showAutonomy }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;">
+        <div>
+          <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Autonomy</h1>
+          <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0;">Trust made visible. Each cell shows the agent's independence level per play × rep.</p>
+        </div>
+        <sc-if value="{{ showDemoteConfirm }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px 20px; border: 1px solid var(--border-default); background: var(--ink-0);">
+            <span style="font-family: var(--font-sans); font-size: 14px; color: var(--text-primary);">Demote all reps to "Drafts for approval"?</span>
+            <button style="height: 36px; padding: 0 16px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-700);" onClick="{{ confirmDemote }}">Confirm</button>
+            <button style="height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-50);" onClick="{{ cancelDemote }}">Cancel</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hideDemoteConfirm }}" hint-placeholder-val="{{ true }}">
+          <button style="height: 40px; padding: 0 20px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer;" style-hover="background: var(--ink-700);" onClick="{{ startDemote }}">Demote all to Drafts for approval</button>
+        </sc-if>
+      </div>
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background: var(--ink-50);">
+              <th style="padding: 12px 16px; text-align: left; font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border-subtle); position: sticky; left: 0; background: var(--ink-50);">Rep</th>
+              <sc-for list="{{ autonomyPlays }}" as="apl" hint-placeholder-count="5">
+                <th style="padding: 12px 12px; text-align: center; font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); border-bottom: 1px solid var(--border-subtle); min-width: 120px;">{{ apl }}</th>
+              </sc-for>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ autonomyRows }}" as="ar" hint-placeholder-count="4">
+              <tr style="border-bottom: 1px solid var(--border-subtle);">
+                <td style="padding: 14px 16px; font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary); position: sticky; left: 0; background: var(--ink-0);">{{ ar.rep }}</td>
+                <sc-for list="{{ ar.cells }}" as="cell" hint-placeholder-count="5">
+                  <td style="padding: 10px 12px; text-align: center;">
+                    <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 4px;">
+                      <span style="display: inline-block; padding: 4px 12px; font-family: var(--font-sans); font-size: 12px; font-weight: 500; {{ cell.style }}">{{ cell.level }}</span>
+                      <sc-if value="{{ cell.promo }}">
+                        <button style="font-family: var(--font-sans); font-size: 11px; color: var(--wiz-orange-600); background: none; border: none; cursor: pointer; padding: 0;" style-hover="color: var(--wiz-orange-700);">{{ cell.promo }}</button>
+                      </sc-if>
+                    </div>
+                  </td>
+                </sc-for>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <!-- Warm-up Progress -->
+      <div style="margin-top: 24px; border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 20px 24px;">
+        <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 12px;">Org warm-up</div>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="flex: 1; height: 6px; background: var(--ink-100);">
+            <div style="height: 6px; background: var(--ink-900); width: 92%;"></div>
+          </div>
+          <span style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">46 of 50</span>
+          <span style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">reviewed · 0 factual errors · 89% approved without edits</span>
+        </div>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- A5: Brand & Content -->
+    <sc-if value="{{ showBrand }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Brand &amp; Content</h1>
+      <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0 0 28px;">Make every email sound like Brightwater, not like a robot.</p>
+      <!-- Tabs -->
+      <div style="display: flex; gap: 0; border-bottom: 1px solid var(--border-subtle); margin-bottom: 24px;">
+        <sc-for list="{{ brandTabs }}" as="bt" hint-placeholder-count="5">
+          <button style="padding: 10px 20px; font-family: var(--font-sans); font-size: 14px; border: none; cursor: pointer; transition: color 120ms; {{ bt.style }}" style-hover="color: var(--text-primary);" onClick="{{ bt.onClick }}">{{ bt.label }}</button>
+        </sc-for>
+      </div>
+      <!-- Voice tab content -->
+      <sc-if value="{{ showVoiceTab }}" hint-placeholder-val="{{ true }}">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div>
+            <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Voice settings</h2>
+            <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+              <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Tone</div>
+                <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary);">Warm, professional, direct. Like a helpful colleague, not a salesperson.</div>
+              </div>
+              <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Sign-off</div>
+                <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary);">Best, [Rep name]</div>
+              </div>
+              <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Banned phrases</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;">
+                  <span style="padding: 3px 10px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">just checking in</span>
+                  <span style="padding: 3px 10px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">circle back</span>
+                  <span style="padding: 3px 10px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">per my last email</span>
+                  <span style="padding: 3px 10px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">leverage</span>
+                  <span style="padding: 3px 10px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">synergy</span>
+                </div>
+              </div>
+              <div style="padding: 16px 20px;">
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Example emails</div>
+                <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">5 examples uploaded</div>
+              </div>
+            </div>
+            <button style="margin-top: 12px; height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-50);" onClick="{{ toggleEditVoice }}">{{ editVoiceLabel }}</button>
+            <sc-if value="{{ showEditVoiceForm }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top: 16px; border: 1px solid var(--border-default); background: var(--ink-0); padding: 20px;">
+                <div style="font-family: var(--font-sans); font-weight: 600; font-size: 14px; color: var(--text-primary); margin-bottom: 16px;">Edit voice settings</div>
+                <div style="margin-bottom: 12px;">
+                  <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Tone description</div>
+                  <textarea style="width: 100%; height: 60px; padding: 8px 12px; border: 1px solid var(--border-default); background: var(--ink-0); font-family: var(--font-sans); font-size: 14px; resize: vertical; outline: none; box-sizing: border-box;">Warm, professional, direct. Like a helpful colleague, not a salesperson.</textarea>
+                </div>
+                <div style="margin-bottom: 12px;">
+                  <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Sign-off</div>
+                  <input type="text" value="Best, [Rep name]" style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-default); background: var(--ink-0); font-family: var(--font-sans); font-size: 14px; outline: none; box-sizing: border-box;" />
+                </div>
+                <div style="margin-bottom: 16px;">
+                  <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Add banned phrase</div>
+                  <div style="display: flex; gap: 8px;">
+                    <input type="text" placeholder="e.g. touching base" style="flex: 1; padding: 8px 12px; border: 1px solid var(--border-default); background: var(--ink-0); font-family: var(--font-sans); font-size: 14px; outline: none; box-sizing: border-box;" />
+                    <button style="height: 36px; padding: 0 12px; background: var(--ink-0); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-50);">Add</button>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button style="height: 36px; padding: 0 16px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-700);" onClick="{{ saveVoice }}">Save changes</button>
+                  <button style="height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-50);" onClick="{{ toggleEditVoice }}">Cancel</button>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <div>
+            <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Live preview</h2>
+            <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+              <div style="padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); background: var(--ink-50);">
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);">Preview on: Harbor &amp; Pine (Tom Galloway)</div>
+              </div>
+              <div style="padding: 20px; font-family: var(--font-sans); font-size: 14px; color: var(--text-primary); line-height: 1.6;">
+                <p style="margin: 0 0 12px;">Hi Tom,</p>
+                <p style="margin: 0 0 12px;">It's been about 8 weeks since your last order — a bit longer than your usual pace. Your go-to items are in stock and ready to ship.</p>
+                <p style="margin: 0 0 12px;">I can put together your usual order if you'd like — just say the word.</p>
+                <p style="margin: 0;">Best,<br>Dana Chen<br>Brightwater Lighting Co.</p>
+              </div>
+            </div>
+            <div style="margin-top: 12px; font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">This is a real draft the agent would send. Change your voice settings to see the difference.</div>
+          </div>
+        </div>
+      </sc-if>
+      <!-- Offers tab -->
+      <sc-if value="{{ showOffersTab }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Offer Registry</h2>
+          <p style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); margin: 0 0 16px;">The agent can only use offers you define here. It cannot invent or extend an offer.</p>
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+            <div style="display: grid; grid-template-columns: 2fr 2fr 1fr 1fr; padding: 10px 20px; border-bottom: 1px solid var(--border-subtle); background: var(--ink-50);">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Offer</div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Terms</div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Plays</div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Expires</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 2fr 2fr 1fr 1fr; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle); align-items: center;">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px;">Free freight on winback</div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);">Free freight on first reorder, any size</div>
+              <div><span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">Winback</span></div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--text-muted);">Oct 31</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 2fr 2fr 1fr 1fr; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle); align-items: center;">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px;">Closeout 15% off</div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);">15% discount on clearance SKUs, min 12 units</div>
+              <div><span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">Closeout</span></div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--text-muted);">Dec 31</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 2fr 2fr 1fr 1fr; padding: 14px 20px; align-items: center;">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px;">Price hold 30 days</div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);">Lock quoted price for 30 days from quote date</div>
+              <div><span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">Open Quote</span></div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">No expiry</div>
+            </div>
+          </div>
+          <button style="margin-top: 12px; height: 40px; padding: 0 20px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer;" style-hover="background: var(--ink-700);" onClick="{{ toggleAddOffer }}">{{ addOfferLabel }}</button>
+          <sc-if value="{{ showAddOfferForm }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top: 16px; border: 1px solid var(--border-default); background: var(--ink-0); padding: 20px;">
+              <div style="font-family: var(--font-sans); font-weight: 600; font-size: 14px; color: var(--text-primary); margin-bottom: 16px;">New offer</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                <div>
+                  <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Offer name</div>
+                  <input type="text" placeholder="e.g. Free freight on winback" style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 14px; outline: none; box-sizing: border-box;" />
+                </div>
+                <div>
+                  <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Applies to play</div>
+                  <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 14px; outline: none; box-sizing: border-box;">
+                    <option>Winback</option>
+                    <option>Pre-Lapse</option>
+                    <option>Open Quote</option>
+                    <option>Closeout</option>
+                    <option>All plays</option>
+                  </select>
+                </div>
+              </div>
+              <div style="margin-bottom: 12px;">
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Terms</div>
+                <textarea style="width: 100%; height: 48px; padding: 8px 12px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 14px; resize: vertical; outline: none; box-sizing: border-box;" placeholder="e.g. Free freight on first reorder, any size"></textarea>
+              </div>
+              <div style="margin-bottom: 16px;">
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Expiry date</div>
+                <input type="date" style="padding: 8px 12px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 14px; outline: none;" />
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button style="height: 36px; padding: 0 16px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-700);" onClick="{{ saveOffer }}">Save offer</button>
+                <button style="height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-50);" onClick="{{ toggleAddOffer }}">Cancel</button>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+      <!-- Claims tab -->
+      <sc-if value="{{ showClaimsTab }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width: 640px;">
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Claims Policy</h2>
+          <p style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); margin: 0 0 16px;">Rules the agent must follow when making claims in emails.</p>
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">MAP enforcement</div>
+              <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary);">Never quote below MAP. Designer-channel accounts excluded from closeout pricing.</div>
+            </div>
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Cohort minimums</div>
+              <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary);">≥10 accounts for any cohort claim, ≥25 for reorder rates. You can raise these but not lower.</div>
+            </div>
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Forbidden language</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;">
+                <span style="padding: 3px 10px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">guaranteed</span>
+                <span style="padding: 3px 10px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">best price</span>
+                <span style="padding: 3px 10px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">exclusive deal</span>
+                <span style="padding: 3px 10px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">limited time only</span>
+              </div>
+            </div>
+            <div style="padding: 16px 20px;">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Behavioural data</div>
+              <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary);">Never mention browsing behaviour, page views, or time on site in emails. Selection only.</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+      <!-- Terms tab -->
+      <sc-if value="{{ showTermsTab }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width: 640px;">
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Freight, Terms &amp; Calendars</h2>
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Free freight threshold</div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 20px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">$2,500</div>
+            </div>
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Minimum order quantity</div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 20px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">6 units</div>
+            </div>
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Opening order minimum</div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 20px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">$500</div>
+            </div>
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Payment terms</div>
+              <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary);">Net 30 (default) · Net 45 available on approval</div>
+            </div>
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Quiet hours</div>
+              <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary);">No sends before 8 AM or after 6 PM in the buyer's local timezone</div>
+            </div>
+            <div style="padding: 16px 20px;">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Blackout dates</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;">
+                <span style="padding: 4px 12px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">Nov 28–29 (Thanksgiving)</span>
+                <span style="padding: 4px 12px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">Dec 24–Jan 2 (Holidays)</span>
+                <span style="padding: 4px 12px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);">Oct 17–22 (High Point Market)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+      <!-- Calendar tab -->
+      <sc-if value="{{ showCalendarTab }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width: 640px;">
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">What's New</h2>
+          <p style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); margin: 0 0 16px;">Content the agent can reference in reactivation and winback plays. Empty or stale (>90 days) content blocks those plays.</p>
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">Fall 2026 Collections</div>
+                <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">Updated Sep 15</span>
+              </div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); margin-top: 6px;">Solstice Collection (12 pcs, modern minimalist), Driftwood Collection (8 pcs, coastal organic), updated Meridian series with new finishes.</div>
+            </div>
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">Lead time improvement</div>
+                <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">Updated Sep 10</span>
+              </div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); margin-top: 6px;">Standard orders now ship in 1–2 business days (was 3–5). Custom finishes 6–8 weeks.</div>
+            </div>
+            <div style="padding: 16px 20px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">High Point Market 2026</div>
+                <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">Updated Sep 1</span>
+              </div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); margin-top: 6px;">Booth IH-402, Oct 17–22. Southeast draw region. Show-exclusive pricing on Solstice collection.</div>
+            </div>
+          </div>
+          <button style="margin-top: 12px; height: 40px; padding: 0 20px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer;" style-hover="background: var(--ink-700);" onClick="{{ toggleAddUpdate }}">{{ addUpdateLabel }}</button>
+          <sc-if value="{{ showAddUpdateForm }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top: 16px; border: 1px solid var(--border-default); background: var(--ink-0); padding: 20px;">
+              <div style="font-family: var(--font-sans); font-weight: 600; font-size: 14px; color: var(--text-primary); margin-bottom: 16px;">Add "What's New" update</div>
+              <div style="margin-bottom: 12px;">
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Title</div>
+                <input type="text" placeholder="e.g. Spring 2027 Collection" style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 14px; outline: none; box-sizing: border-box;" />
+              </div>
+              <div style="margin-bottom: 16px;">
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Description</div>
+                <textarea style="width: 100%; height: 60px; padding: 8px 12px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 14px; resize: vertical; outline: none; box-sizing: border-box;" placeholder="What's new that the agent can mention in winback and reactivation emails?"></textarea>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button style="height: 36px; padding: 0 16px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-700);" onClick="{{ saveUpdate }}">Publish update</button>
+                <button style="height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-50);" onClick="{{ toggleAddUpdate }}">Cancel</button>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+    </main>
+    </sc-if>
+
+    <!-- A6: Data Connections -->
+    <sc-if value="{{ showData }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Data Connections</h1>
+      <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0 0 28px;">Each data source powers specific plays. Connect more to unlock more.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <sc-for list="{{ dataConnections }}" as="dc" hint-placeholder-count="6">
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 20px;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px;">
+              <div style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; color: var(--text-primary);">{{ dc.name }}</div>
+              <div style="width: 10px; height: 10px; {{ dc.dotStyle }}"></div>
+            </div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">{{ dc.freshness }}</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;">
+              <sc-for list="{{ dc.unlocks }}" as="u" hint-placeholder-count="2">
+                <span style="padding: 3px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-secondary);">{{ u }}</span>
+              </sc-for>
+            </div>
+            <button style="height: 32px; padding: 0 14px; font-family: var(--font-sans); font-weight: 500; font-size: 12px; cursor: pointer; {{ dc.btnStyle }}" style-hover="opacity: 0.85;" onClick="{{ dc.onToggle }}">{{ dc.btnLabel }}</button>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- A7: Sending & Deliverability -->
+    <sc-if value="{{ showSending }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Sending &amp; Deliverability</h1>
+      <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0 0 28px;">Mailbox connections, authentication, and health indicators.</p>
+      <!-- Domain Auth -->
+      <div style="margin-bottom: 24px;">
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Domain authentication</h2>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+          <sc-for list="{{ domainAuth }}" as="da" hint-placeholder-count="3">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 8px; height: 8px; background: var(--ink-900);"></div>
+                <span style="font-family: var(--font-sans); font-size: 14px; color: var(--text-primary);">{{ da.label }}</span>
+              </div>
+              <span style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">{{ da.status }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <!-- Mailboxes -->
+      <div style="margin-bottom: 24px;">
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Connected mailboxes</h2>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+          <sc-for list="{{ mailboxes }}" as="mb" hint-placeholder-count="4">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ mb.email }}</div>
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ mb.rep }}</div>
+              </div>
+              <span style="padding: 3px 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 500; border: 1px solid var(--border-default); color: var(--text-secondary);">{{ mb.status }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <!-- Rates -->
+      <div>
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Health metrics (7-day rolling)</h2>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border-subtle); border: 1px solid var(--border-subtle);">
+          <sc-for list="{{ sendingHealth }}" as="sh" hint-placeholder-count="3">
+            <div style="background: var(--ink-0); padding: 20px;">
+              <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">{{ sh.label }}</div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 28px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ sh.value }}</div>
+              <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 4px;">{{ sh.threshold }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- A8: Suppression & Consent -->
+    <sc-if value="{{ showSuppression }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;">
+        <div>
+          <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Suppression &amp; Consent</h1>
+          <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0;">Do-not-contact list. The agent never overrides these.</p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button style="height: 40px; padding: 0 20px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer;" style-hover="background: var(--ink-50);" onClick="{{ exportSuppression }}">{{ exportLabel }}</button>
+          <button style="height: 40px; padding: 0 20px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer;" style-hover="background: var(--ink-700);" onClick="{{ toggleAddEntry }}">Add entry</button>
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+        <div style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 0 14px; height: 40px; border: 1px solid var(--border-default); background: var(--ink-0);">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="var(--text-muted)" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span style="font-family: var(--font-sans); font-size: 14px; color: var(--text-faint);">Search contacts, domains…</span>
+        </div>
+      </div>
+      <!-- Add entry form -->
+      <sc-if value="{{ showAddEntryForm }}" hint-placeholder-val="{{ false }}">
+        <div style="border: 1px solid var(--border-default); background: var(--ink-0); padding: 20px; margin-bottom: 16px;">
+          <div style="font-family: var(--font-sans); font-weight: 600; font-size: 14px; color: var(--text-primary); margin-bottom: 16px;">Add suppression entry</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Contact email or domain</div>
+              <input type="text" placeholder="e.g. buyer@example.com or @competitor.com" style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-default); background: var(--ink-0); font-family: var(--font-sans); font-size: 14px; outline: none; box-sizing: border-box;" />
+            </div>
+            <div>
+              <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Reason</div>
+              <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-default); background: var(--ink-0); font-family: var(--font-sans); font-size: 14px; outline: none; box-sizing: border-box;">
+                <option>Competitor domain</option>
+                <option>Customer request</option>
+                <option>Active negotiation</option>
+                <option>Legal / compliance</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button style="height: 36px; padding: 0 16px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-700);" onClick="{{ addSuppressionEntry }}">Add to list</button>
+            <button style="height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;" style-hover="background: var(--ink-50);" onClick="{{ toggleAddEntry }}">Cancel</button>
+          </div>
+        </div>
+      </sc-if>
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+        <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr 80px; padding: 10px 20px; border-bottom: 1px solid var(--border-subtle); background: var(--ink-50);">
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Contact / Domain</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Reason</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Source</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Date</div>
+          <div></div>
+        </div>
+        <sc-for list="{{ suppressionList }}" as="sl" hint-placeholder-count="8">
+          <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr 80px; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); align-items: center;">
+            <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-primary);">{{ sl.contact }}</div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);">{{ sl.reason }}</div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">{{ sl.source }}</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--text-muted);">{{ sl.date }}</div>
+            <div>
+              <sc-if value="{{ sl.canRemove }}">
+                <button style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); background: none; border: 1px solid var(--border-default); padding: 4px 10px; cursor: pointer;" style-hover="background: var(--ink-50);">Remove</button>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- A9: Results -->
+    <sc-if value="{{ showResults }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Results</h1>
+      <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0 0 28px;">Incremental revenue against holdout. Honest numbers — "not yet significant" when they're not.</p>
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1.5fr; padding: 10px 20px; border-bottom: 1px solid var(--border-subtle); background: var(--ink-50);">
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Play</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Attributed</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Incremental</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Handoff</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Kill rate</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Confidence</div>
+        </div>
+        <sc-for list="{{ resultsRows }}" as="rr" hint-placeholder-count="5">
+          <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1.5fr; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle); align-items: center;">
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ rr.play }}</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ rr.attributed }}</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--wiz-orange-600);">{{ rr.incremental }}</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ rr.handoff }}</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ rr.kill }}</div>
+            <div style="font-family: var(--font-sans); font-size: 13px; {{ rr.confStyle }}">{{ rr.confidence }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- A10: Reports -->
+    <sc-if value="{{ showReports }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;">
+        <div>
+          <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Reports</h1>
+          <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0;">Stakeholder-ready outputs. Download or share.</p>
+        </div>
+      </div>
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+        <sc-for list="{{ reportsList }}" as="rpt" hint-placeholder-count="5">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+            <div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ rpt.name }}</div>
+              <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ rpt.date }}</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button style="height: 32px; padding: 0 12px; background: none; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary); cursor: pointer;" style-hover="background: var(--ink-50);">PDF</button>
+              <button style="height: 32px; padding: 0 12px; background: none; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary); cursor: pointer;" style-hover="background: var(--ink-50);">CSV</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- A11: Audit Log -->
+    <sc-if value="{{ showAudit }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">Audit Log</h1>
+      <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0 0 20px;">Every decision the agent made, searchable.</p>
+      <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+        <div style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 0 14px; height: 40px; border: 1px solid var(--border-default); background: var(--ink-0);">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="var(--text-muted)" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span style="font-family: var(--font-sans); font-size: 14px; color: var(--text-faint);">Search by account, rep, play…</span>
+        </div>
+        <button style="height: 40px; padding: 0 16px; border: 1px solid var(--border-default); background: var(--ink-0); font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 6px;" style-hover="background: var(--ink-50);">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M4 7h6M6 10.5h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Filters
+        </button>
+      </div>
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+        <div style="display: grid; grid-template-columns: 140px 1.5fr 1fr 1fr 1fr; padding: 10px 20px; border-bottom: 1px solid var(--border-subtle); background: var(--ink-50);">
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Time</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Action</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Account</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Play</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Rep</div>
+        </div>
+        <sc-for list="{{ auditLog }}" as="al" hint-placeholder-count="10">
+          <div style="display: grid; grid-template-columns: 140px 1.5fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); align-items: center;">
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--text-muted);">{{ al.time }}</div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-primary);">{{ al.action }}</div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);">{{ al.account }}</div>
+            <div><span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ al.play }}</span></div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">{{ al.rep }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+class Component extends DCLogic {
+  state = {
+    activeNav: 'overview', viewingPlay: null, brandTab: 'voice', showNotifs: false,
+    playEnabled: true, paramLow: 1.25, paramHigh: 2.0,
+    demoted: false, showDemoteConfirm: false,
+    editVoice: false, addOffer: false, addUpdate: false,
+    dataToggles: { orders: true, leads: true, wizshop: false, inventory: true, catalogue: true, wishlist: false },
+    showAddEntry: false, exported: false,
+  };
+
+  renderVals() {
+    const { activeNav, viewingPlay, brandTab } = this.state;
+    const navDefs = [
+      { id: 'overview', label: 'Overview', badge: null, icon: 'overview' },
+      { id: 'library', label: 'Play Library', badge: null, icon: 'library' },
+      { id: 'autonomy', label: 'Autonomy', badge: null, icon: 'autonomy' },
+      { id: 'brand', label: 'Brand & Content', badge: null, icon: 'brand' },
+      { id: 'data', label: 'Data Connections', badge: null, icon: 'data' },
+      { id: 'sending', label: 'Sending', badge: null, icon: 'sending' },
+      { id: 'suppression', label: 'Suppression', badge: null, icon: 'suppression' },
+      { id: 'results', label: 'Results', badge: null, icon: 'results' },
+      { id: 'reports', label: 'Reports', badge: null, icon: 'reports' },
+      { id: 'audit', label: 'Audit Log', badge: null, icon: 'audit' },
+    ];
+    const navItems = navDefs.map(n => {
+      const isActive = n.id === activeNav;
+      return {
+        ...n,
+        onClick: () => this.setState({ activeNav: n.id, viewingPlay: null, showNotifs: false }),
+        label: React.createElement('span', { style: { color: isActive ? 'var(--ink-900)' : 'var(--text-secondary)', fontWeight: isActive ? 500 : 400 } }, n.label),
+        icon: React.createElement('span', { dangerouslySetInnerHTML: { __html: this.icon(n.icon) }, style: { display: 'flex', alignItems: 'center', justifyContent: 'center', color: isActive ? 'var(--wiz-orange-600)' : 'var(--text-muted)' } }),
+        style: isActive ? 'background: var(--ink-50); border-left: 2px solid var(--wiz-orange-600); padding-left: 18px;' : 'background: transparent; border-left: 2px solid transparent; padding-left: 18px;',
+      };
+    });
+
+    return {
+      navItems,
+      toggleNotifs: () => this.setState(s => ({ showNotifs: !s.showNotifs })),
+      goToRep: () => { window.location = 'WizCRM Sales Agents.dc.html'; },
+      goToSimulator: () => { window.location = 'WizSDR Simulator.dc.html'; },
+      showNotifs: this.state.showNotifs,
+      adminNotifs: [
+        { text: 'Warm-up progress: 46 of 50 reviewed — almost there', time: '1 hour ago', dotColor: 'var(--wiz-orange-600)', onClick: () => this.setState({ activeNav: 'autonomy', showNotifs: false }) },
+        { text: 'Luis Herrera: Pre-Lapse approaching L3 promotion (26/30)', time: '3 hours ago', dotColor: 'var(--wiz-orange-600)', onClick: () => this.setState({ activeNav: 'autonomy', showNotifs: false }) },
+        { text: 'Complaint rate steady at 0.02% — well below breaker', time: '6 hours ago', dotColor: 'var(--ink-300)', onClick: () => this.setState({ activeNav: 'sending', showNotifs: false }) },
+        { text: 'Inventory feed last synced 4 hours ago', time: '4 hours ago', dotColor: 'var(--ink-300)', onClick: () => this.setState({ activeNav: 'data', showNotifs: false }) },
+      ],
+      showOverview: activeNav === 'overview',
+      showPlayLibrary: activeNav === 'library' && !viewingPlay,
+      showAdminPlayDetail: activeNav === 'library' && !!viewingPlay,
+      showAutonomy: activeNav === 'autonomy',
+      showBrand: activeNav === 'brand',
+      showData: activeNav === 'data',
+      showSending: activeNav === 'sending',
+      showSuppression: activeNav === 'suppression',
+      showResults: activeNav === 'results',
+      showReports: activeNav === 'reports',
+      showAudit: activeNav === 'audit',
+      // A1 Overview
+      overviewStats: [
+        { label: 'Incremental revenue', value: '$42,800', sub: 'vs holdout this month', color: 'var(--wiz-orange-600)' },
+        { label: 'Plays live', value: '5', sub: 'of 16 total', color: 'var(--text-primary)' },
+        { label: 'Drafts pending', value: '23', sub: 'across team', color: 'var(--text-primary)' },
+        { label: 'Handoff rate', value: '18%', sub: 'trending down', color: 'var(--text-primary)' },
+        { label: 'Complaint rate', value: '0.02%', sub: 'well below 0.1% breaker', color: 'var(--text-primary)' },
+      ],
+      overviewPlays: [
+        { name: 'Pre-Lapse Cadence', status: 'Live', statusStyle: 'background: var(--ink-900); color: var(--ink-0);', revenue: '$18,420', onClick: () => this.setState({ activeNav: 'library', viewingPlay: 'prelapse' }) },
+        { name: 'Open Quote Follow-up', status: 'Live', statusStyle: 'background: var(--ink-900); color: var(--ink-0);', revenue: '$12,600', onClick: () => this.setState({ activeNav: 'library', viewingPlay: 'prelapse' }) },
+        { name: 'SKU Replenishment', status: 'Live', statusStyle: 'background: var(--ink-900); color: var(--ink-0);', revenue: '$6,200', onClick: () => this.setState({ activeNav: 'library', viewingPlay: 'prelapse' }) },
+        { name: 'Speed-to-Lead', status: 'Live', statusStyle: 'background: var(--ink-900); color: var(--ink-0);', revenue: '$4,100', onClick: () => this.setState({ activeNav: 'library', viewingPlay: 'prelapse' }) },
+        { name: 'Winback 90–180', status: 'Warm-up', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-muted);', revenue: '$1,480', onClick: () => this.setState({ activeNav: 'library', viewingPlay: 'prelapse' }) },
+      ],
+      overviewTeam: [
+        { rep: 'Dana Chen', detail: '48 accounts · L3 on Pre-Lapse', sent: '47', drafts: '7' },
+        { rep: 'Luis Herrera', detail: '62 accounts · L2 all plays', sent: '38', drafts: '9' },
+        { rep: 'Kim Tran', detail: '41 accounts · L3 on Open Quote', sent: '29', drafts: '4' },
+        { rep: 'Marcus Webb', detail: '55 accounts · L2 all plays', sent: '34', drafts: '3' },
+      ],
+      delivHealth: [
+        { label: 'SPF', value: 'Passing' },
+        { label: 'DKIM', value: 'Passing' },
+        { label: 'DMARC', value: 'Passing' },
+        { label: 'Bounce rate (7d)', value: '0.8%' },
+        { label: 'Complaint rate (7d)', value: '0.02%' },
+      ],
+      handoffTrend: [
+        { height: '80px', fillHeight: '56px', label: 'W1' },
+        { height: '80px', fillHeight: '48px', label: 'W2' },
+        { height: '80px', fillHeight: '40px', label: 'W3' },
+        { height: '80px', fillHeight: '36px', label: 'W4' },
+        { height: '80px', fillHeight: '28px', label: 'W5' },
+        { height: '80px', fillHeight: '22px', label: 'W6' },
+      ],
+      // A2 Play Library
+      goBackToLibrary: () => this.setState({ viewingPlay: null }),
+      playLibrary: [
+        { name: 'Pre-Lapse Cadence', description: 'Catch customers before they slip away', category: 'Replenishment', status: 'Live', statusStyle: 'background: var(--ink-900); color: var(--ink-0);', metric: '$18,420', metricLabel: 'Incremental this month', blockedReason: null, onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+        { name: 'Open Quote Follow-up', description: 'Remind buyers about quotes that haven\'t converted', category: 'Live intent', status: 'Live', statusStyle: 'background: var(--ink-900); color: var(--ink-0);', metric: '$12,600', metricLabel: 'Incremental this month', blockedReason: null, onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+        { name: 'SKU Replenishment', description: 'Nudge accounts when products they buy are due for reorder', category: 'Replenishment', status: 'Live', statusStyle: 'background: var(--ink-900); color: var(--ink-0);', metric: '$6,200', metricLabel: 'Incremental this month', blockedReason: null, onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+        { name: 'Speed-to-Lead', description: 'Respond to new leads within minutes', category: 'Lead lane', status: 'Live', statusStyle: 'background: var(--ink-900); color: var(--ink-0);', metric: '$4,100', metricLabel: 'Incremental this month', blockedReason: null, onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+        { name: 'Winback 90–180', description: 'Re-engage lapsed accounts with a comeback offer', category: 'Retention', status: 'Warm-up', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-muted);', metric: '$1,480', metricLabel: 'Incremental this month', blockedReason: null, onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+        { name: 'Abandoned Cart', description: 'Follow up on carts left idle in WizShop', category: 'Live intent', status: 'Ready', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);', metric: null, metricLabel: null, blockedReason: null, onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+        { name: 'Back-in-Stock', description: 'Notify buyers when an item they wanted is available again', category: 'Live intent', status: 'Ready', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);', metric: null, metricLabel: null, blockedReason: null, onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+        { name: 'New Arrival Match', description: 'Alert buyers to new products matching their purchase history', category: 'Discovery', status: 'Ready', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);', metric: null, metricLabel: null, blockedReason: null, onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+        { name: 'Browse Abandonment', description: 'Follow up on products viewed but not added to cart', category: 'Activation', status: 'Blocked', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-faint);', metric: null, metricLabel: null, blockedReason: 'Needs the WizShop behaviour feed', onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+        { name: 'Registered, Never Ordered', description: 'Activate portal accounts that signed up but never placed an order', category: 'Activation', status: 'Blocked', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-faint);', metric: null, metricLabel: null, blockedReason: 'Needs the WizShop behaviour feed', onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+        { name: 'Shrinking Basket', description: 'Reach accounts whose average order value is declining', category: 'Retention', status: 'Blocked', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-faint);', metric: null, metricLabel: null, blockedReason: 'Needs cohort engine + catalogue tagging', onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+        { name: 'Deep Winback', description: 'Last-resort outreach for accounts lapsed 180+ days', category: 'Reactivation', status: 'Blocked', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-faint);', metric: null, metricLabel: null, blockedReason: 'Needs content facts ("What\'s New")', onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+      ],
+      // A3 Play Detail
+      playEnabled: this.state.playEnabled,
+      playStatusLabel: this.state.playEnabled ? 'Live' : 'Disabled',
+      playStatusStyle: this.state.playEnabled ? 'background: var(--ink-900); color: var(--ink-0);' : 'border: 1px solid var(--border-default); color: var(--text-faint);',
+      togglePlayLabel: this.state.playEnabled ? 'Disable' : 'Enable',
+      togglePlayEnabled: () => this.setState(s => ({ playEnabled: !s.playEnabled })),
+      audienceCount: Math.round(214 * (1.25 / this.state.paramLow) * (this.state.paramHigh / 2.0)),
+      adminPlayParams: [
+        { label: 'Start threshold', help: 'How many times past their usual interval before the play fires', value: this.state.paramLow.toFixed(2) + '×', min: '1.10×', max: '1.60×', thumbPos: Math.round(((this.state.paramLow - 1.1) / 0.5) * 100) + '%',
+          onDecrease: () => this.setState(s => ({ paramLow: Math.max(1.1, +(s.paramLow - 0.05).toFixed(2)) })),
+          onIncrease: () => this.setState(s => ({ paramLow: Math.min(1.6, +(s.paramLow + 0.05).toFixed(2)) })),
+        },
+        { label: 'Upper bound', help: 'Above this ratio the contact moves to Winback instead', value: this.state.paramHigh.toFixed(1) + '×', min: '1.6×', max: '3.0×', thumbPos: Math.round(((this.state.paramHigh - 1.6) / 1.4) * 100) + '%',
+          onDecrease: () => this.setState(s => ({ paramHigh: Math.max(1.6, +(s.paramHigh - 0.1).toFixed(1)) })),
+          onIncrease: () => this.setState(s => ({ paramHigh: Math.min(3.0, +(s.paramHigh + 0.1).toFixed(1)) })),
+        },
+      ],
+      audiencePreview: [
+        { account: 'Harbor & Pine', contact: 'Tom Galloway', ratio: '1.30×', rep: 'Dana Chen' },
+        { account: 'Artisan Wholesale', contact: 'Priya Sharma', ratio: '1.62×', rep: 'Dana Chen' },
+        { account: 'Meridian Home Décor', contact: 'Frank Ellis', ratio: '1.27×', rep: 'Dana Chen' },
+        { account: 'Coastal Warehouse', contact: 'James Lee', ratio: '1.41×', rep: 'Luis Herrera' },
+        { account: 'Evergreen Imports', contact: 'Sarah Gold', ratio: '1.35×', rep: 'Kim Tran' },
+      ],
+      enrolmentFunnel: [
+        { count: '214', label: 'Matched', drop: null },
+        { count: '18', label: 'Suppressed', drop: '−12 DNC, −6 recent order' },
+        { count: '20', label: 'Holdout', drop: '10% program holdout' },
+        { count: '8', label: 'Higher priority', drop: 'Lost to Open Quote' },
+        { count: '12', label: 'Capped', drop: 'Frequency limit reached' },
+        { count: '156', label: 'Enrolled', drop: null },
+      ],
+      // A4 Autonomy
+      showDemoteConfirm: this.state.showDemoteConfirm,
+      hideDemoteConfirm: !this.state.showDemoteConfirm,
+      startDemote: () => this.setState({ showDemoteConfirm: true }),
+      confirmDemote: () => this.setState({ demoted: true, showDemoteConfirm: false }),
+      cancelDemote: () => this.setState({ showDemoteConfirm: false }),
+      autonomyPlays: ['Pre-Lapse', 'Open Quote', 'SKU Repl.', 'Speed-to-Lead', 'Winback'],
+      autonomyRows: this.state.demoted ? [
+        { rep: 'Dana Chen', cells: Array(5).fill({ level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: null }) },
+        { rep: 'Luis Herrera', cells: Array(5).fill({ level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: null }) },
+        { rep: 'Kim Tran', cells: Array(5).fill({ level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: null }) },
+        { rep: 'Marcus Webb', cells: Array(5).fill({ level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: null }) },
+      ] : [
+        { rep: 'Dana Chen', cells: [
+          { level: 'Auto-send + spot checks', style: 'background: var(--ink-900); color: var(--ink-0);', promo: 'Offer: Fully automatic' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '14 of 30 approvals' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '22 of 30 approvals' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '10 of 30 approvals' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '8 of 30 approvals' },
+        ]},
+        { rep: 'Luis Herrera', cells: [
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '26 of 30 approvals' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '18 of 30 approvals' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '20 of 30 approvals' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '12 of 30 approvals' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '5 of 30 approvals' },
+        ]},
+        { rep: 'Kim Tran', cells: [
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '28 of 30 approvals' },
+          { level: 'Auto-send + spot checks', style: 'background: var(--ink-900); color: var(--ink-0);', promo: null },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '15 of 30 approvals' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '8 of 30 approvals' },
+          { level: 'Observe only', style: 'border: 1px solid var(--border-default); color: var(--text-faint);', promo: null },
+        ]},
+        { rep: 'Marcus Webb', cells: [
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '19 of 30 approvals' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '11 of 30 approvals' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '14 of 30 approvals' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '6 of 30 approvals' },
+          { level: 'Drafts for approval', style: 'border: 1px solid var(--border-default); color: var(--text-secondary);', promo: '3 of 30 approvals' },
+        ]},
+      ],
+      // A5 Brand
+      showVoiceTab: brandTab === 'voice',
+      showOffersTab: brandTab === 'offers',
+      showClaimsTab: brandTab === 'claims',
+      showTermsTab: brandTab === 'terms',
+      showCalendarTab: brandTab === 'calendar',
+      brandTabs: [
+        { label: 'Voice', style: brandTab === 'voice' ? 'color: var(--text-primary); font-weight: 500; background: var(--ink-0); border-bottom: 2px solid var(--ink-900);' : 'color: var(--text-muted); background: transparent; border-bottom: 2px solid transparent;', onClick: () => this.setState({ brandTab: 'voice' }) },
+        { label: 'Offers', style: brandTab === 'offers' ? 'color: var(--text-primary); font-weight: 500; background: var(--ink-0); border-bottom: 2px solid var(--ink-900);' : 'color: var(--text-muted); background: transparent; border-bottom: 2px solid transparent;', onClick: () => this.setState({ brandTab: 'offers' }) },
+        { label: 'Claims Policy', style: brandTab === 'claims' ? 'color: var(--text-primary); font-weight: 500; background: var(--ink-0); border-bottom: 2px solid var(--ink-900);' : 'color: var(--text-muted); background: transparent; border-bottom: 2px solid transparent;', onClick: () => this.setState({ brandTab: 'claims' }) },
+        { label: 'Freight & Terms', style: brandTab === 'terms' ? 'color: var(--text-primary); font-weight: 500; background: var(--ink-0); border-bottom: 2px solid var(--ink-900);' : 'color: var(--text-muted); background: transparent; border-bottom: 2px solid transparent;', onClick: () => this.setState({ brandTab: 'terms' }) },
+        { label: 'Calendar', style: brandTab === 'calendar' ? 'color: var(--text-primary); font-weight: 500; background: var(--ink-0); border-bottom: 2px solid var(--ink-900);' : 'color: var(--text-muted); background: transparent; border-bottom: 2px solid transparent;', onClick: () => this.setState({ brandTab: 'calendar' }) },
+      ],
+      // A5 Brand flows
+      showEditVoiceForm: this.state.editVoice,
+      editVoiceLabel: this.state.editVoice ? 'Cancel editing' : 'Edit voice',
+      toggleEditVoice: () => this.setState(s => ({ editVoice: !s.editVoice })),
+      saveVoice: () => this.setState({ editVoice: false }),
+      showAddOfferForm: this.state.addOffer,
+      addOfferLabel: this.state.addOffer ? 'Cancel' : 'Add offer',
+      toggleAddOffer: () => this.setState(s => ({ addOffer: !s.addOffer })),
+      saveOffer: () => this.setState({ addOffer: false }),
+      showAddUpdateForm: this.state.addUpdate,
+      addUpdateLabel: this.state.addUpdate ? 'Cancel' : 'Add update',
+      toggleAddUpdate: () => this.setState(s => ({ addUpdate: !s.addUpdate })),
+      saveUpdate: () => this.setState({ addUpdate: false }),
+      // A6 Data
+      dataConnections: (() => {
+        const dt = this.state.dataToggles;
+        const items = [
+          { key: 'orders', name: 'Orders & Quotes', freshOn: 'Last synced 2 min ago', unlocks: ['Pre-Lapse', 'Open Quote', 'SKU Replenishment', 'Winback'] },
+          { key: 'leads', name: 'Leads', freshOn: 'Real-time webhook', unlocks: ['Speed-to-Lead'] },
+          { key: 'wizshop', name: 'WizShop Behaviour', freshOn: 'Last synced just now', unlocks: ['Abandoned Cart', 'Browse Abandonment', 'Registered Never Ordered'] },
+          { key: 'inventory', name: 'Inventory', freshOn: 'Last synced 4 hours ago', unlocks: ['Back-in-Stock', 'Live stock claims'] },
+          { key: 'catalogue', name: 'Catalogue & Tags', freshOn: 'Last synced 1 day ago', unlocks: ['New Arrival Match', 'Shrinking Basket'] },
+          { key: 'wishlist', name: 'Wishlist', freshOn: 'Last synced just now', unlocks: ['Wishlist Alerts'] },
+        ];
+        return items.map(i => ({
+          ...i,
+          freshness: dt[i.key] ? i.freshOn : 'Not connected',
+          dotStyle: dt[i.key] ? 'background: var(--ink-900);' : 'background: var(--ink-300);',
+          btnLabel: dt[i.key] ? 'Disconnect' : 'Connect',
+          btnStyle: dt[i.key] ? 'background: var(--ink-0); color: var(--text-muted); border: 1px solid var(--border-default);' : 'background: var(--ink-900); color: var(--ink-0); border: none;',
+          onToggle: () => this.setState(s => ({ dataToggles: { ...s.dataToggles, [i.key]: !s.dataToggles[i.key] } })),
+        }));
+      })(),
+      // A7 Sending
+      domainAuth: [
+        { label: 'SPF (brightwater.com)', status: 'Passing' },
+        { label: 'DKIM (brightwater.com)', status: 'Passing' },
+        { label: 'DMARC (brightwater.com)', status: 'Passing — policy: reject' },
+      ],
+      mailboxes: [
+        { email: 'dana@brightwater.com', rep: 'Dana Chen', status: 'Connected' },
+        { email: 'luis@brightwater.com', rep: 'Luis Herrera', status: 'Connected' },
+        { email: 'kim@brightwater.com', rep: 'Kim Tran', status: 'Connected' },
+        { email: 'marcus.w@brightwater.com', rep: 'Marcus Webb', status: 'Connected' },
+      ],
+      sendingHealth: [
+        { label: 'Bounce rate', value: '0.8%', threshold: 'Breaker at 2.0%' },
+        { label: 'Complaint rate', value: '0.02%', threshold: 'L2 at 0.1% · Pause at 0.3%' },
+        { label: 'Breaker state', value: 'Normal', threshold: 'All systems operating' },
+      ],
+      // A8 Suppression
+      exportLabel: this.state.exported ? '✓ Exported as CSV' : 'Export',
+      exportSuppression: () => { this.setState({ exported: true }); setTimeout(() => this.setState({ exported: false }), 2000); },
+      showAddEntryForm: this.state.showAddEntry,
+      toggleAddEntry: () => this.setState(s => ({ showAddEntry: !s.showAddEntry })),
+      addSuppressionEntry: () => this.setState({ showAddEntry: false }),
+      suppressionList: [
+        { contact: 'mark@competitor-lights.com', reason: 'Competitor domain', source: 'Manual', date: 'Sep 15', canRemove: true },
+        { contact: 'info@competitor-lights.com', reason: 'Competitor domain', source: 'Manual', date: 'Sep 15', canRemove: true },
+        { contact: 'beth@lakeview.com', reason: 'Unsubscribe request', source: 'System', date: 'Sep 12', canRemove: false },
+        { contact: 'Harbor & Pine (account)', reason: 'Active negotiation', source: 'Manual (Dana)', date: 'Sep 10', canRemove: true },
+        { contact: 'returns@meridian.com', reason: 'Open RMA', source: 'Automatic', date: 'Sep 8', canRemove: false },
+        { contact: 'alex@desertmod.com', reason: 'Spam complaint', source: 'System', date: 'Sep 3', canRemove: false },
+        { contact: 'orders@golden-imports.com', reason: 'AR dispute', source: 'Automatic', date: 'Aug 28', canRemove: false },
+        { contact: 'billing@summitint.com', reason: 'Credit hold', source: 'Automatic', date: 'Aug 22', canRemove: false },
+      ],
+      // A9 Results
+      resultsRows: [
+        { play: 'Pre-Lapse Cadence', attributed: '$24,600', incremental: '$18,420', handoff: '18%', kill: '2.1%', confidence: '95% CI: $14,200–$22,640', confStyle: 'color: var(--text-secondary);' },
+        { play: 'Open Quote Follow-up', attributed: '$18,900', incremental: '$12,600', handoff: '12%', kill: '1.4%', confidence: '95% CI: $8,400–$16,800', confStyle: 'color: var(--text-secondary);' },
+        { play: 'SKU Replenishment', attributed: '$9,400', incremental: '$6,200', handoff: '22%', kill: '3.8%', confidence: '90% CI: $2,100–$10,300', confStyle: 'color: var(--text-secondary);' },
+        { play: 'Speed-to-Lead', attributed: '$6,800', incremental: '$4,100', handoff: '8%', kill: '0.5%', confidence: 'Not yet significant (n=42)', confStyle: 'color: var(--text-faint); font-style: italic;' },
+        { play: 'Winback 90–180', attributed: '$2,200', incremental: '$1,480', handoff: '34%', kill: '4.2%', confidence: 'Not yet significant (n=28)', confStyle: 'color: var(--text-faint); font-style: italic;' },
+      ],
+      // A10 Reports
+      reportsList: [
+        { name: 'Pre-Lapse Cadence — September Results', date: 'Generated Sep 28, 2026' },
+        { name: 'Open Quote Follow-up — September Results', date: 'Generated Sep 28, 2026' },
+        { name: 'All Plays — Q3 2026 Summary', date: 'Generated Sep 28, 2026' },
+        { name: 'Warm-up Completion Report', date: 'Generated Sep 20, 2026' },
+        { name: 'Pre-Lapse Cadence — August Results', date: 'Generated Aug 31, 2026' },
+      ],
+      // A11 Audit
+      auditLog: [
+        { time: 'Sep 28, 9:42 AM', action: 'Sent email (auto, L3)', account: 'Meridian Home Décor', play: 'Pre-Lapse', rep: 'Dana Chen' },
+        { time: 'Sep 28, 9:18 AM', action: 'Handled OOO reply', account: 'Beacon & Birch', play: 'SKU Repl.', rep: 'Dana Chen' },
+        { time: 'Sep 28, 8:55 AM', action: 'Sent email (approved)', account: 'Artisan Wholesale', play: 'Open Quote', rep: 'Dana Chen' },
+        { time: 'Sep 28, 8:30 AM', action: 'Suppressed — recent order', account: 'Golden State Imports', play: 'Pre-Lapse', rep: 'Luis Herrera' },
+        { time: 'Sep 28, 8:12 AM', action: 'Processed unsubscribe', account: 'Lakeview Supply', play: 'Winback', rep: 'Dana Chen' },
+        { time: 'Sep 28, 7:58 AM', action: 'Sent email (approved)', account: 'Atelier South', play: 'Speed-to-Lead', rep: 'Kim Tran' },
+        { time: 'Sep 28, 7:45 AM', action: 'Draft created for approval', account: 'Coastal Living Direct', play: 'Speed-to-Lead', rep: 'Dana Chen' },
+        { time: 'Sep 27, 6:30 PM', action: 'Exited — order placed', account: 'Crestline Furnishings', play: 'Open Quote', rep: 'Marcus Webb' },
+        { time: 'Sep 27, 4:20 PM', action: 'Enrolled contact', account: 'Sagebrook Home', play: 'Pre-Lapse', rep: 'Dana Chen' },
+        { time: 'Sep 27, 2:15 PM', action: 'Promotion offered: L2→L3', account: '—', play: 'Pre-Lapse', rep: 'Luis Herrera' },
+      ],
+    };
+  }
+
+  icon(name) {
+    const icons = {
+      overview: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="6" height="6" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="3" width="6" height="6" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="11" width="6" height="6" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="11" width="6" height="6" stroke="currentColor" stroke-width="1.5"/></svg>',
+      library: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 3v14l10-7L7 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+      autonomy: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2v16M2 10h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/></svg>',
+      brand: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 5h12v10H4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 8h6M7 11h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+      data: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><ellipse cx="10" cy="6" rx="6" ry="3" stroke="currentColor" stroke-width="1.5"/><path d="M4 6v8c0 1.66 2.69 3 6 3s6-1.34 6-3V6" stroke="currentColor" stroke-width="1.5"/><path d="M4 10c0 1.66 2.69 3 6 3s6-1.34 6-3" stroke="currentColor" stroke-width="1.5"/></svg>',
+      sending: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5l14 5-14 5V5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+      suppression: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 15L15 5" stroke="currentColor" stroke-width="1.5"/></svg>',
+      results: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 17V9h3v8H3zM8.5 17V5h3v12h-3zM14 17V2h3v15h-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+      reports: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="3" width="12" height="14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 7h6M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+      audit: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 4h12v12H4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M4 8h12M8 4v12" stroke="currentColor" stroke-width="1.5"/></svg>',
+    };
+    return icons[name] || '';
+  }
+}
+</script>
+</body>
+</html>

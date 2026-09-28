@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/wizcommerce-design-system-remix-019df7db-e0c4-715b-add3-bb30e9d8a2f2/tokens.css">
+  <script src="_ds/wizcommerce-design-system-remix-019df7db-e0c4-715b-add3-bb30e9d8a2f2/_ds_bundle.js"></script>
+  <style>
+    body { margin: 0; background: var(--surface-page); }
+    a { color: var(--wiz-orange-600); text-decoration: none; }
+    a:hover { color: var(--wiz-orange-700); }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</helmet>
+
+<!-- App Shell -->
+<div style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
+
+  <!-- Top Bar -->
+  <header style="display: flex; align-items: center; height: 56px; padding: 0 20px; background: var(--ink-900); color: var(--ink-0); flex-shrink: 0; gap: 16px;">
+    <!-- Logo -->
+    <div style="display: flex; align-items: center; gap: 8px; margin-right: 8px;">
+      <img src="assets/wiz-logo-white.png" alt="WizCommerce" style="height: 20px; width: auto;">
+      <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--ink-400);">/ SDR</span>
+    </div>
+    <div style="width: 1px; height: 24px; background: var(--ink-700);"></div>
+    <!-- Tenant -->
+    <button style="display: flex; align-items: center; gap: 6px; background: none; border: none; color: var(--ink-300); font-family: var(--font-sans); font-size: 13px; cursor: pointer; padding: 4px 8px;"
+            style-hover="background: var(--ink-800); color: var(--ink-100);"
+            onClick="{{ toggleTenantMenu }}">
+      <span>Brightwater Lighting Co.</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div style="flex: 1;"></div>
+    <!-- Sim Date -->
+    <div style="font-family: var(--font-sans); font-size: 12px; color: var(--ink-500); display: flex; align-items: center; gap: 6px;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="0" stroke="currentColor" stroke-width="1.2"/><path d="M1 5.5h12" stroke="currentColor" stroke-width="1.2"/><path d="M4 1v2M10 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Sep 28, 2026
+    </div>
+    <div style="width: 1px; height: 24px; background: var(--ink-700);"></div>
+    <!-- Notifications -->
+    <button style="position: relative; background: none; border: none; color: var(--ink-400); cursor: pointer; padding: 6px;"
+            style-hover="color: var(--ink-100);"
+            onClick="{{ toggleNotifications }}">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2a5 5 0 00-5 5v3l-1.5 2.5h13L15 10V7a5 5 0 00-5-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 16.5a2 2 0 004 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <sc-if value="{{ notifCount }}">
+        <span style="position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; background: var(--wiz-orange-600); color: var(--ink-900); font-family: var(--font-sans); font-weight: 600; font-size: 10px; display: flex; align-items: center; justify-content: center;">{{ notifCount }}</span>
+      </sc-if>
+    </button>
+    <!-- Notifications Dropdown -->
+    <sc-if value="{{ showNotifs }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; top: 52px; right: 120px; width: 340px; border: 1px solid var(--border-subtle); background: var(--ink-0); z-index: 100; box-shadow: var(--shadow-lifted);">
+        <div style="padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-family: var(--font-sans); font-weight: 600; font-size: 14px; color: var(--text-primary);">Notifications</span>
+          <button style="font-family: var(--font-sans); font-size: 12px; color: var(--wiz-orange-600); background: none; border: none; cursor: pointer;" style-hover="color: var(--wiz-orange-700);">Mark all read</button>
+        </div>
+        <sc-for list="{{ notifItems }}" as="ni" hint-placeholder-count="4">
+          <div style="padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); cursor: pointer; transition: background 120ms;" style-hover="background: var(--ink-50);" onClick="{{ ni.onClick }}">
+            <div style="display: flex; align-items: flex-start; gap: 8px;">
+              <div style="width: 6px; height: 6px; margin-top: 6px; flex-shrink: 0; background: {{ ni.dotColor }};"></div>
+              <div>
+                <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-primary); line-height: 1.4;">{{ ni.text }}</div>
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 2px;">{{ ni.time }}</div>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <div style="width: 1px; height: 24px; background: var(--ink-700);"></div>
+    <!-- Persona -->
+    <button style="display: flex; align-items: center; gap: 8px; background: none; border: none; color: var(--ink-0); cursor: pointer; padding: 4px 8px; font-family: var(--font-sans); font-size: 13px;"
+            style-hover="background: var(--ink-800);"
+            onClick="{{ togglePersonaMenu }}">
+      <div style="width: 28px; height: 28px; background: var(--wiz-orange-600); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px; color: var(--ink-900);">DC</div>
+      <span>Dana Chen</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </header>
+
+  <div style="display: flex; flex: 1; overflow: hidden;">
+    <!-- Left Sidebar -->
+    <nav style="width: 240px; flex-shrink: 0; background: var(--ink-0); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; padding: 12px 0; overflow-y: auto;">
+      <!-- Nav Items -->
+      <sc-for list="{{ navItems }}" as="nav" hint-placeholder-count="6">
+        <button style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 20px; border: none; cursor: pointer; font-family: var(--font-sans); font-size: 14px; text-align: left; transition: background 120ms; {{ nav.style }}"
+                style-hover="background: var(--ink-50);"
+                onClick="{{ nav.onClick }}">
+          <span style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;">{{ nav.icon }}</span>
+          <span style="flex: 1;">{{ nav.label }}</span>
+          <sc-if value="{{ nav.badge }}">
+            <span style="min-width: 20px; height: 20px; padding: 0 6px; background: var(--ink-900); color: var(--ink-0); font-family: var(--font-sans); font-weight: 600; font-size: 11px; display: flex; align-items: center; justify-content: center;">{{ nav.badge }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+      <div style="flex: 1;"></div>
+      <!-- Simulator pill -->
+      <div style="margin: 8px 16px;">
+        <button style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--border-default); background: var(--ink-50); font-family: var(--font-mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); cursor: pointer; width: 100%;"
+                style-hover="border-color: var(--ink-400); color: var(--text-secondary);"
+                onClick="{{ goToSimulator }}">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Simulator
+        </button>
+        <button style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--border-default); background: var(--ink-0); font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); cursor: pointer; width: 100%; margin-top: 8px;"
+                style-hover="border-color: var(--ink-400); color: var(--text-secondary);"
+                onClick="{{ togglePersonaMenu }}">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Switch to Admin
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <!-- R1: Home -->
+    <sc-if value="{{ showHome }}" hint-placeholder-val="{{ true }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <div style="margin-bottom: 32px;">
+        <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 32px; line-height: 1.1; letter-spacing: -0.02em; color: var(--text-primary); margin: 0 0 8px;">Good morning, Dana</h1>
+        <p style="font-family: var(--font-sans); font-size: 15px; color: var(--text-muted); margin: 0;">Here's what the agent has been doing on your behalf.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border-subtle); border: 1px solid var(--border-subtle); margin-bottom: 32px;">
+        <sc-for list="{{ summaryCards }}" as="card" hint-placeholder-count="4">
+          <div style="background: var(--ink-0); padding: 20px 24px;">
+            <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 12px;">{{ card.label }}</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 36px; letter-spacing: -0.01em; color: var(--text-primary); margin-bottom: 4px; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ card.value }}</div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">{{ card.detail }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <!-- Coming up this week -->
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 16px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 120ms;"
+           style-hover="background: var(--ink-50);"
+           onClick="{{ goToPlays }}">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 3v14l10-7L7 3z" stroke="var(--wiz-orange-600)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ comingUpText }}</div>
+            <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">across 5 active plays on your book</div>
+          </div>
+        </div>
+        <span style="font-family: var(--font-sans); font-size: 13px; color: var(--wiz-orange-600);">View plays →</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0;">Drafts waiting for you</h2>
+            <button style="font-family: var(--font-sans); font-size: 13px; color: var(--wiz-orange-600); background: none; border: none; cursor: pointer; padding: 0;" style-hover="color: var(--wiz-orange-700);">View all →</button>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1px; background: var(--border-subtle); border: 1px solid var(--border-subtle);">
+            <sc-for list="{{ drafts }}" as="draft" hint-placeholder-count="3">
+              <div style="background: var(--ink-0); padding: 16px 20px; cursor: pointer; transition: background 120ms;" style-hover="background: var(--ink-50);">
+                <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px;">
+                  <div>
+                    <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary); margin-bottom: 2px;">{{ draft.buyer }}</div>
+                    <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ draft.account }}</div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <sc-if value="{{ draft.urgent }}">
+                      <span style="padding: 2px 8px; background: var(--ink-900); color: var(--ink-0); font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;">Speed</span>
+                    </sc-if>
+                    <span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ draft.play }}</span>
+                  </div>
+                </div>
+                <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); line-height: 1.45;">{{ draft.subject }}</div>
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 6px;">{{ draft.time }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0;">Handoffs needing you</h2>
+            <button style="font-family: var(--font-sans); font-size: 13px; color: var(--wiz-orange-600); background: none; border: none; cursor: pointer; padding: 0;" style-hover="color: var(--wiz-orange-700);">View all →</button>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1px; background: var(--border-subtle); border: 1px solid var(--border-subtle);">
+            <sc-for list="{{ handoffs }}" as="ho" hint-placeholder-count="3">
+              <div style="background: var(--ink-0); padding: 16px 20px; cursor: pointer; transition: background 120ms;" style-hover="background: var(--ink-50);">
+                <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px;">
+                  <div>
+                    <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary); margin-bottom: 2px;">{{ ho.buyer }}</div>
+                    <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ ho.account }}</div>
+                  </div>
+                  <span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ ho.intent }}</span>
+                </div>
+                <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); line-height: 1.45;">{{ ho.preview }}</div>
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 6px;">{{ ho.time }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0;">Agent activity since yesterday</h2>
+          <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">Showing last 24 hours</div>
+        </div>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+          <sc-for list="{{ activityFeed }}" as="act" hint-placeholder-count="6">
+            <div style="display: flex; align-items: flex-start; gap: 16px; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="width: 8px; height: 8px; margin-top: 6px; flex-shrink: 0; background: var(--ink-300);"></div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+                  <span style="font-family: var(--font-sans); font-size: 14px; color: var(--text-primary);">{{ act.description }}</span>
+                  <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ act.account }}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px;">
+                  <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ act.time }}</span>
+                  <button style="font-family: var(--font-sans); font-size: 12px; color: var(--wiz-orange-600); background: none; border: none; cursor: pointer; padding: 0;" style-hover="color: var(--wiz-orange-700);">Why?</button>
+                </div>
+              </div>
+              <span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted); flex-shrink: 0;">{{ act.play }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- R8: My Plays -->
+    <sc-if value="{{ showPlays }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <div style="margin-bottom: 28px;">
+        <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">My Plays</h1>
+        <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0;">Plays your admin has enabled. You control how they run on your book.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <sc-for list="{{ myPlays }}" as="mp" hint-placeholder-count="5">
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); cursor: pointer; transition: border-color 120ms;"
+               style-hover="border-color: var(--ink-400);"
+               onClick="{{ mp.onClick }}">
+            <!-- Card header -->
+            <div style="padding: 20px 24px 16px;">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px;">
+                <div>
+                  <div style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; color: var(--text-primary); margin-bottom: 4px;">{{ mp.name }}</div>
+                  <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); line-height: 1.45;">{{ mp.purpose }}</div>
+                </div>
+                <span style="padding: 3px 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 500; flex-shrink: 0; {{ mp.statusStyle }}">{{ mp.status }}</span>
+              </div>
+            </div>
+            <!-- Stats row -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border-subtle); border-top: 1px solid var(--border-subtle);">
+              <div style="background: var(--ink-0); padding: 12px 16px;">
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px;">Accounts</div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 18px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ mp.accounts }}</div>
+              </div>
+              <div style="background: var(--ink-0); padding: 12px 16px;">
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px;">This week</div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 18px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ mp.sendsWeek }}</div>
+              </div>
+              <div style="background: var(--ink-0); padding: 12px 16px;">
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px;">My level</div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px;">{{ mp.myLevel }}</div>
+              </div>
+              <div style="background: var(--ink-0); padding: 12px 16px;">
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px;">This month</div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 18px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--text-primary);">{{ mp.revenue }}</div>
+              </div>
+            </div>
+            <!-- Autonomy progress -->
+            <div style="padding: 12px 24px; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 12px;">
+              <div style="flex: 1; height: 4px; background: var(--ink-100);">
+                <div style="height: 4px; background: var(--ink-900); width: {{ mp.progressWidth }};"></div>
+              </div>
+              <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); flex-shrink: 0;">{{ mp.progressLabel }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- R9: My Play Detail -->
+    <sc-if value="{{ showPlayDetail }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <button style="display: flex; align-items: center; gap: 6px; background: none; border: none; font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); cursor: pointer; padding: 0; margin-bottom: 20px;"
+              style-hover="color: var(--text-secondary);"
+              onClick="{{ goBackToPlays }}">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to My Plays
+      </button>
+
+      <!-- Play Header -->
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); margin-bottom: 24px;">
+        <div style="padding: 24px;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px;">
+            <div>
+              <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">{{ playDetail.category }}</div>
+              <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">{{ playDetail.name }}</h1>
+              <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin: 0; max-width: 640px;">{{ playDetail.description }}</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button style="height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;"
+                      style-hover="background: var(--ink-50);"
+                      onClick="{{ togglePlayPause }}">{{ playPauseLabel }}</button>
+            </div>
+          </div>
+          <!-- Stats -->
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border-subtle); border: 1px solid var(--border-subtle); margin-top: 16px;">
+            <sc-for list="{{ playDetail.stats }}" as="pds" hint-placeholder-count="5">
+              <div style="background: var(--ink-0); padding: 14px 16px;">
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">{{ pds.label }}</div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 20px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: {{ pds.color }};">{{ pds.value }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <!-- Autonomy control -->
+        <div style="padding: 16px 24px; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 16px;">
+          <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary);">My autonomy:</span>
+          <span style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);">{{ playDetail.myLevel }}</span>
+          <div style="flex: 1; height: 4px; background: var(--ink-100); max-width: 200px;">
+            <div style="height: 4px; background: var(--ink-900); width: {{ playDetail.progressWidth }};"></div>
+          </div>
+          <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ playDetail.progressLabel }}</span>
+          <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-faint);">Admin ceiling: {{ playDetail.ceiling }}</span>
+        </div>
+      </div>
+
+      <!-- Steps Timeline -->
+      <div style="margin-bottom: 32px;">
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">How this play works</h2>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 24px;">
+          <div style="display: flex; gap: 0;">
+            <sc-for list="{{ playDetail.steps }}" as="step" hint-placeholder-count="5">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative;">
+                <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--ink-900); font-family: var(--font-sans); font-weight: 600; font-size: 13px; color: var(--ink-900); {{ step.dotStyle }}">{{ step.num }}</div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); margin-top: 8px;">{{ step.label }}</div>
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 2px; max-width: 120px;">{{ step.detail }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sample Email -->
+      <div style="margin-bottom: 32px;">
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 4px;">Sample email on a real account</h2>
+        <p style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); margin: 0 0 16px;">This is what the first email looks like for Marcus Rivera at Sagebrook Home.</p>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); max-width: 640px;">
+          <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary); margin-bottom: 4px;">{{ playDetail.sampleSubject }}</div>
+            <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">From: Dana Chen · To: mrivera@sagebrook.com</div>
+          </div>
+          <div style="padding: 20px;">
+            {{ playDetail.sampleBody }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Enrolled Accounts Table -->
+      <div style="margin-bottom: 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0;">My accounts in this play</h2>
+          <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-muted); letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ playDetail.enrolledCount }} enrolled</span>
+        </div>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+          <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 2fr 80px; padding: 10px 20px; border-bottom: 1px solid var(--border-subtle); background: var(--ink-50);">
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Account</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Step</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Next send</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Why enrolled</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;"></div>
+          </div>
+          <sc-for list="{{ playDetail.enrolled }}" as="enr" hint-placeholder-count="5">
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 2fr 80px; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle); align-items: center;">
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ enr.account }}</div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);">{{ enr.step }}</div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-secondary); letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ enr.nextSend }}</div>
+              <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ enr.reason }}</div>
+              <div>
+                <button style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); background: none; border: 1px solid var(--border-default); padding: 4px 10px; cursor: pointer;"
+                        style-hover="background: var(--ink-50); color: var(--text-secondary);">Remove</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- Recently Exited -->
+      <div>
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Recently exited</h2>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+          <sc-for list="{{ playDetail.exited }}" as="ex" hint-placeholder-count="4">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div>
+                <span style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ ex.account }}</span>
+                <span style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); margin-left: 12px;">{{ ex.reason }}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <sc-if value="{{ ex.revenue }}">
+                  <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ ex.revenue }}</span>
+                </sc-if>
+                <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ ex.date }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- R6: My Settings -->
+    <sc-if value="{{ showSettings }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 8px;">My Settings</h1>
+      <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0 0 32px;">Control how the agent works on your behalf.</p>
+
+      <!-- Autonomy note -->
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 16px 24px; margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 120ms;"
+           style-hover="background: var(--ink-50);"
+           onClick="{{ goToPlays }}">
+        <div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">Autonomy levels are managed per play</div>
+          <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">View and adjust your autonomy level for each play in My Plays.</div>
+        </div>
+        <span style="font-family: var(--font-sans); font-size: 13px; color: var(--wiz-orange-600);">Go to My Plays →</span>
+      </div>
+
+      <!-- Signature -->
+      <div style="margin-bottom: 32px;">
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 4px;">Email signature</h2>
+        <p style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); margin: 0 0 16px;">This signature is appended to every email the agent sends on your behalf.</p>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 20px;">
+          <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-primary); line-height: 1.6;">
+            <div style="font-weight: 500;">Dana Chen</div>
+            <div>Sales Representative</div>
+            <div>Brightwater Lighting Co.</div>
+            <div style="color: var(--text-muted);">dana@brightwater.com · (404) 555-0192</div>
+          </div>
+        </div>
+        <button style="margin-top: 12px; height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;"
+                style-hover="background: var(--ink-50);">Edit signature</button>
+      </div>
+
+      <!-- Out of Office -->
+      <div style="margin-bottom: 32px;">
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 4px;">Out of office</h2>
+        <p style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); margin: 0 0 16px;">When active, the agent pauses all plays for your book and resumes when you're back.</p>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary); margin-bottom: 4px;">{{ oooStatus }}</div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">{{ oooDetail }}</div>
+          </div>
+          <button style="height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;"
+                  style-hover="background: var(--ink-50);"
+                  onClick="{{ toggleOoo }}">{{ oooButtonLabel }}</button>
+        </div>
+      </div>
+
+      <!-- Notification Preferences -->
+      <div>
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 4px;">Notifications</h2>
+        <p style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); margin: 0 0 16px;">Choose what the agent notifies you about.</p>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+          <sc-for list="{{ notifSettings }}" as="ns" hint-placeholder-count="4">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ ns.label }}</div>
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ ns.description }}</div>
+              </div>
+              <div style="width: 40px; height: 22px; border: 1.5px solid var(--ink-900); position: relative; cursor: pointer; {{ ns.toggleBg }}" onClick="{{ ns.onToggle }}">
+                <div style="width: 14px; height: 14px; position: absolute; top: 2.5px; {{ ns.togglePos }} background: var(--ink-900); transition: left 120ms;"></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- R7: Weekly Digest -->
+    <sc-if value="{{ showDigest }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+        <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0;">Weekly Digest</h1>
+        <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">Sep 22 – Sep 28, 2026</div>
+      </div>
+      <p style="font-family: var(--font-sans); font-size: 14px; color: var(--text-muted); margin: 0 0 28px;">What the agent did on your behalf this week.</p>
+
+      <!-- Headline Stats -->
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border-subtle); border: 1px solid var(--border-subtle); margin-bottom: 32px;">
+        <sc-for list="{{ digestStats }}" as="ds" hint-placeholder-count="5">
+          <div style="background: var(--ink-0); padding: 20px 20px;">
+            <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 10px;">{{ ds.label }}</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 32px; letter-spacing: -0.01em; color: {{ ds.color }}; font-feature-settings: 'tnum' 1, 'lnum' 1; margin-bottom: 2px;">{{ ds.value }}</div>
+            <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ ds.sub }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- Two columns: Sent breakdown + Replies handled -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+        <!-- Sent by play -->
+        <div>
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Sent by play</h2>
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+            <sc-for list="{{ digestByPlay }}" as="dbp" hint-placeholder-count="5">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ dbp.play }}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                  <div style="width: 80px; height: 6px; background: var(--ink-100);">
+                    <div style="height: 6px; background: var(--ink-900); width: {{ dbp.barWidth }};"></div>
+                  </div>
+                  <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; width: 24px; text-align: right;">{{ dbp.count }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Replies handled -->
+        <div>
+          <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Replies handled autonomously</h2>
+          <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+            <sc-for list="{{ digestReplies }}" as="dr" hint-placeholder-count="5">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle);">
+                <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);">{{ dr.type }}</div>
+                <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ dr.count }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results vs Holdout -->
+      <div style="margin-bottom: 32px;">
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Results vs holdout</h2>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 24px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+            <div>
+              <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Incremental revenue</div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 28px; letter-spacing: -0.01em; color: var(--wiz-orange-600); font-feature-settings: 'tnum' 1, 'lnum' 1;">$8,420</div>
+              <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 4px;">above holdout group</div>
+            </div>
+            <div>
+              <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Your conversion rate</div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 28px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">14.2%</div>
+              <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 4px;">vs 9.8% holdout</div>
+            </div>
+            <div>
+              <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Agent handled</div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 28px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">68%</div>
+              <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 4px;">of work without you</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top performing accounts -->
+      <div>
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Top accounts this week</h2>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+          <sc-for list="{{ digestTopAccounts }}" as="dta" hint-placeholder-count="5">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ dta.name }}</div>
+                <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ dta.event }}</div>
+              </div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary); letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ dta.revenue }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- R5: Account Detail -->
+    <sc-if value="{{ showAccountDetail }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <!-- Back link -->
+      <button style="display: flex; align-items: center; gap: 6px; background: none; border: none; font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); cursor: pointer; padding: 0; margin-bottom: 20px;"
+              style-hover="color: var(--text-secondary);"
+              onClick="{{ goBackToAccounts }}">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to Accounts
+      </button>
+
+      <!-- Account Header -->
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); margin-bottom: 24px;">
+        <div style="padding: 24px; display: flex; gap: 32px; align-items: flex-start;">
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+              <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0;">Sagebrook Home</h1>
+              <span style="padding: 3px 10px; background: var(--ink-900); color: var(--ink-0); font-family: var(--font-sans); font-size: 11px; font-weight: 500;">Needs you</span>
+            </div>
+            <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">Northeast · Tier 1 · Primary: Marcus Rivera (mrivera@sagebrook.com)</div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border-subtle); border: 1px solid var(--border-subtle);">
+              <div style="background: var(--ink-0); padding: 14px 16px;">
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">Lifetime orders</div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 24px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">28</div>
+              </div>
+              <div style="background: var(--ink-0); padding: 14px 16px;">
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">Lifetime value</div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 24px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">$64,200</div>
+              </div>
+              <div style="background: var(--ink-0); padding: 14px 16px;">
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">Order rhythm</div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 24px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">32d</div>
+              </div>
+              <div style="background: var(--ink-0); padding: 14px 16px;">
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">Last order</div>
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 24px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">Sep 8</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Account Controls -->
+        <div style="padding: 16px 24px; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 12px;">
+          <button style="height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px;"
+                  style-hover="background: var(--ink-50);"
+                  onClick="{{ togglePause }}">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="3" y="2" width="3" height="10" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="2" width="3" height="10" stroke="currentColor" stroke-width="1.2"/></svg>
+            {{ pauseLabel }}
+          </button>
+          <button style="height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;"
+                  style-hover="background: var(--ink-50);">Manual only</button>
+          <button style="height: 36px; padding: 0 16px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;"
+                  style-hover="background: var(--ink-50);">Exclude from play…</button>
+          <div style="flex: 1;"></div>
+          <button style="height: 36px; padding: 0 16px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px;"
+                  style-hover="background: var(--ink-700);"
+                  onClick="{{ toggleKillSwitch }}">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M7 4v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="9.5" r="0.75" fill="currentColor"/></svg>
+            {{ killLabel }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Play Link -->
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 16px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 120ms;"
+           style-hover="background: var(--ink-50);"
+           onClick="{{ goToAccountPlay }}">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 3v14l10-7L7 3z" stroke="var(--wiz-orange-600)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">Active play: Follow up on open quotes</div>
+            <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">Step 1 of 3 · Next send: today · Autonomy: Drafts for approval</div>
+          </div>
+        </div>
+        <span style="font-family: var(--font-sans); font-size: 13px; color: var(--wiz-orange-600);">View play →</span>
+      </div>
+
+      <!-- Timeline -->
+      <div>
+        <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0 0 16px;">Agent timeline</h2>
+        <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+          <sc-for list="{{ accountTimeline }}" as="evt" hint-placeholder-count="8">
+            <div style="display: flex; gap: 16px; padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 20px;">
+                <div style="width: 10px; height: 10px; flex-shrink: 0; {{ evt.dotStyle }}"></div>
+                <div style="width: 1px; flex: 1; background: var(--border-subtle); margin-top: 4px;"></div>
+              </div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
+                  <span style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ evt.action }}</span>
+                  <span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ evt.play }}</span>
+                </div>
+                <sc-if value="{{ evt.detail }}">
+                  <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 4px;">{{ evt.detail }}</div>
+                </sc-if>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ evt.time }}</span>
+                  <button style="font-family: var(--font-sans); font-size: 12px; color: var(--wiz-orange-600); background: none; border: none; cursor: pointer; padding: 0;"
+                          style-hover="color: var(--wiz-orange-700);"
+                          onClick="{{ evt.onWhy }}">Why?</button>
+                </div>
+                <!-- Why explanation (expanded) -->
+                <sc-if value="{{ evt.showWhy }}">
+                  <div style="margin-top: 10px; padding: 12px 16px; border: 1px solid var(--border-subtle); background: var(--ink-50);">
+                    <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Explanation</div>
+                    <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); line-height: 1.5;">{{ evt.whyText }}</div>
+                    <sc-if value="{{ evt.whyFacts }}">
+                      <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
+                        <sc-for list="{{ evt.whyFacts }}" as="fact" hint-placeholder-count="2">
+                          <span style="padding: 3px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-secondary); background: var(--ink-0);">{{ fact }}</span>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- R4: Accounts List -->
+    <sc-if value="{{ showAccounts }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; overflow-y: auto; padding: 32px 40px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+        <h1 style="font-family: var(--font-serif); font-weight: 300; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 0;">Accounts</h1>
+        <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-muted); letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ accountTotal }} accounts</div>
+      </div>
+      <!-- Search + Filters -->
+      <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+        <div style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 0 14px; height: 40px; border: 1px solid var(--border-default); background: var(--ink-0);">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="var(--text-muted)" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span style="font-family: var(--font-sans); font-size: 14px; color: var(--text-faint);">Search accounts, buyers…</span>
+        </div>
+        <button style="height: 40px; padding: 0 16px; border: 1px solid var(--border-default); background: var(--ink-0); font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 6px;"
+                style-hover="background: var(--ink-50);">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M4 7h6M6 10.5h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Filters
+        </button>
+        <button style="height: 40px; padding: 0 16px; border: 1px solid var(--border-default); background: var(--ink-0); font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 6px;"
+                style-hover="background: var(--ink-50);">
+          Sort: Needs attention
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <!-- Accounts Table -->
+      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+        <!-- Header -->
+        <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 120px; padding: 10px 20px; border-bottom: 1px solid var(--border-subtle); background: var(--ink-50);">
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Account</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Primary contact</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Last order</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Active play</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Lifetime</div>
+          <div style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Status</div>
+        </div>
+        <!-- Rows -->
+        <sc-for list="{{ accountRows }}" as="acct" hint-placeholder-count="10">
+          <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 120px; padding: 14px 20px; border-bottom: 1px solid var(--border-subtle); cursor: pointer; transition: background 120ms; align-items: center;"
+               style-hover="background: var(--ink-50);"
+               onClick="{{ acct.onClick }}">
+            <div>
+              <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ acct.name }}</div>
+              <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ acct.region }}</div>
+            </div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);">{{ acct.contact }}</div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-secondary); letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ acct.lastOrder }}</div>
+            <div>
+              <sc-if value="{{ acct.activePlay }}">
+                <span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ acct.activePlay }}</span>
+              </sc-if>
+              <sc-if value="{{ acct.noPlay }}">
+                <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-faint);">—</span>
+              </sc-if>
+            </div>
+            <div style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; color: var(--text-primary); letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1;">{{ acct.lifetime }}</div>
+            <div>
+              <span style="padding: 3px 10px; font-family: var(--font-sans); font-size: 11px; font-weight: 500; {{ acct.statusStyle }}">{{ acct.status }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+    </sc-if>
+
+    <!-- R3: Handoffs -->
+    <sc-if value="{{ showHandoffs }}" hint-placeholder-val="{{ false }}">
+    <div style="flex: 1; display: flex; overflow: hidden;">
+      <!-- Handoff List -->
+      <div style="width: 380px; flex-shrink: 0; border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; background: var(--ink-0);">
+        <div style="padding: 20px 20px 16px; border-bottom: 1px solid var(--border-subtle);">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0; line-height: 1.3;">Handoffs</h2>
+            <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--text-muted);">{{ handoffCount }} needing you</span>
+          </div>
+        </div>
+        <div style="flex: 1; overflow-y: auto;">
+          <sc-for list="{{ handoffItems }}" as="ho" hint-placeholder-count="5">
+            <div style="padding: 14px 20px; border-bottom: 1px solid var(--border-subtle); cursor: pointer; transition: background 120ms; {{ ho.selectedStyle }}"
+                 style-hover="background: var(--ink-100);"
+                 onClick="{{ ho.onSelect }}">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px;">
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ ho.buyer }}</div>
+                <span style="padding: 2px 8px; background: var(--ink-900); color: var(--ink-0); font-family: var(--font-sans); font-size: 11px; font-weight: 500; flex-shrink: 0;">{{ ho.intent }}</span>
+              </div>
+              <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">{{ ho.account }}</div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ ho.preview }}</div>
+              <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 6px;">{{ ho.time }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- Handoff Detail / Reply Composer -->
+      <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+        <sc-if value="{{ selectedHandoff }}" hint-placeholder-val="{{ true }}">
+          <!-- Header -->
+          <div style="padding: 20px 24px 16px; border-bottom: 1px solid var(--border-subtle); background: var(--ink-0);">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px;">
+              <div>
+                <div style="font-family: var(--font-sans); font-weight: 600; font-size: 16px; color: var(--text-primary); margin-bottom: 2px;">{{ selectedHandoff.buyer }}</div>
+                <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">{{ selectedHandoff.account }} · {{ selectedHandoff.buyerEmail }}</div>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <span style="padding: 4px 10px; background: var(--ink-900); color: var(--ink-0); font-family: var(--font-sans); font-size: 12px; font-weight: 500;">{{ selectedHandoff.intent }}</span>
+                <span style="padding: 4px 10px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ selectedHandoff.play }}</span>
+              </div>
+            </div>
+            <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); line-height: 1.5;">{{ selectedHandoff.reason }}</div>
+          </div>
+
+          <!-- Thread + Reply area -->
+          <div style="flex: 1; overflow-y: auto; padding: 24px;">
+            <div style="max-width: 640px; margin: 0 auto;">
+              <!-- Original buyer reply -->
+              <div style="margin-bottom: 24px;">
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Buyer's reply</div>
+                <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); padding: 20px;">
+                  <div style="font-family: var(--font-sans); font-size: 14px; color: var(--text-primary); line-height: 1.6;">{{ selectedHandoff.buyerReplyBody }}</div>
+                  <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-top: 12px;">{{ selectedHandoff.buyerReplyTime }}</div>
+                </div>
+              </div>
+
+              <!-- Pre-built links -->
+              <sc-if value="{{ selectedHandoff.hasLinks }}" hint-placeholder-val="{{ true }}">
+                <div style="margin-bottom: 24px;">
+                  <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Pre-built links</div>
+                  <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <sc-for list="{{ selectedHandoff.links }}" as="link" hint-placeholder-count="2">
+                      <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--border-default); background: var(--ink-0); font-family: var(--font-sans); font-size: 13px; color: var(--text-primary); cursor: pointer;"
+                            style-hover="background: var(--ink-50);">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5.5 8.5l3-3M6 9.5l-1.3 1.3a1.5 1.5 0 01-2.1-2.1L3.9 7.4M8 4.5l1.3-1.3a1.5 1.5 0 012.1 2.1L10.1 6.6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                        {{ link }}
+                      </span>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <!-- Contact update form -->
+              <sc-if value="{{ selectedHandoff.hasContactUpdate }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-bottom: 24px; border: 1px solid var(--border-default); background: var(--ink-0); padding: 16px 20px;">
+                  <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 12px;">Contact update</div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                      <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">New contact name</div>
+                      <div style="padding: 8px 12px; border: 1px solid var(--border-default); background: var(--ink-50); font-family: var(--font-sans); font-size: 14px;">{{ selectedHandoff.newContactName }}</div>
+                    </div>
+                    <div>
+                      <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">New contact email</div>
+                      <div style="padding: 8px 12px; border: 1px solid var(--border-default); background: var(--ink-50); font-family: var(--font-sans); font-size: 14px;">{{ selectedHandoff.newContactEmail }}</div>
+                    </div>
+                  </div>
+                  <button style="margin-top: 12px; height: 36px; padding: 0 16px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 13px; cursor: pointer;"
+                          style-hover="background: var(--ink-700);">Confirm &amp; Update Contact</button>
+                </div>
+              </sc-if>
+
+              <!-- Pre-drafted reply -->
+              <div>
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Your reply (pre-drafted)</div>
+                <div style="border: 1px solid var(--border-subtle); background: var(--ink-0);">
+                  <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);">
+                    <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">To: {{ selectedHandoff.buyerEmail }}</div>
+                  </div>
+                  <div style="padding: 20px;">
+                    {{ selectedHandoff.replyBody }}
+                  </div>
+                  <!-- Sources -->
+                  <div style="padding: 12px 20px; border-top: 1px solid var(--border-subtle); background: var(--ink-50);">
+                    <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;">Data sources</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                      <sc-for list="{{ selectedHandoff.sources }}" as="src" hint-placeholder-count="2">
+                        <span style="padding: 3px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-secondary); background: var(--ink-0);">{{ src }}</span>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Bar -->
+          <div style="padding: 16px 24px; border-top: 1px solid var(--border-subtle); background: var(--ink-0); display: flex; align-items: center; gap: 12px;">
+            <button style="height: 40px; padding: 0 24px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer;"
+                    style-hover="background: var(--ink-700);"
+                    onClick="{{ sendHandoff }}">{{ sendHandoffLabel }}</button>
+            <button style="height: 40px; padding: 0 24px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer;"
+                    style-hover="background: var(--ink-50);">Edit Reply</button>
+            <div style="flex: 1;"></div>
+            <button style="height: 40px; padding: 0 16px; background: none; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); cursor: pointer;"
+                    style-hover="background: var(--ink-50); color: var(--text-secondary);"
+                    onClick="{{ dismissHandoff }}">Dismiss</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- R2: Agent Inbox -->
+    <sc-if value="{{ showInbox }}" hint-placeholder-val="{{ false }}">
+    <div style="flex: 1; display: flex; overflow: hidden;">
+      <!-- Draft List -->
+      <div style="width: 380px; flex-shrink: 0; border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; background: var(--ink-0);">
+        <!-- Inbox Header -->
+        <div style="padding: 20px 20px 16px; border-bottom: 1px solid var(--border-subtle);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <h2 style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; margin: 0; line-height: 1.3;">Agent Inbox</h2>
+            <span style="font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; font-feature-settings: 'tnum' 1, 'lnum' 1; color: var(--text-muted);">{{ inboxCount }} drafts</span>
+          </div>
+          <!-- Filter tabs -->
+          <div style="display: flex; gap: 0; border: 1px solid var(--border-default);">
+            <sc-for list="{{ inboxFilters }}" as="filt" hint-placeholder-count="4">
+              <button style="flex: 1; padding: 6px 0; font-family: var(--font-sans); font-size: 12px; font-weight: 500; border: none; cursor: pointer; transition: background 120ms;"
+                      style-hover="background: var(--ink-50);"
+                      onClick="{{ filt.onClick }}">{{ filt.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <!-- Draft items -->
+        <div style="flex: 1; overflow-y: auto;">
+          <sc-for list="{{ inboxDrafts }}" as="item" hint-placeholder-count="7">
+            <div style="padding: 14px 20px; border-bottom: 1px solid var(--border-subtle); cursor: pointer; transition: background 120ms; {{ item.selectedStyle }}"
+                 style-hover="background: var(--ink-100);"
+                 onClick="{{ item.onSelect }}">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px;">
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 14px; color: var(--text-primary);">{{ item.buyer }}</div>
+                <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                  <sc-if value="{{ item.urgent }}">
+                    <span style="padding: 2px 8px; background: var(--ink-900); color: var(--ink-0); font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;">Speed</span>
+                  </sc-if>
+                  <span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ item.play }}</span>
+                </div>
+              </div>
+              <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">{{ item.account }}</div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.subject }}</div>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px;">
+                <span style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ item.time }}</span>
+                <sc-if value="{{ item.expiry }}">
+                  <span style="font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ item.expiry }}</span>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- Draft Preview -->
+      <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+        <sc-if value="{{ selectedDraft }}" hint-placeholder-val="{{ true }}">
+          <!-- Preview Header -->
+          <div style="padding: 16px 24px; border-bottom: 1px solid var(--border-subtle); background: var(--ink-0);">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px;">
+              <div>
+                <div style="font-family: var(--font-sans); font-weight: 600; font-size: 16px; color: var(--text-primary); margin-bottom: 2px;">{{ selectedDraft.buyer }}</div>
+                <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);">{{ selectedDraft.account }} · {{ selectedDraft.buyerEmail }}</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">{{ selectedDraft.play }}</span>
+                <span style="padding: 2px 8px; font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); border: 1px solid var(--border-default);">{{ selectedDraft.sensitivity }}</span>
+              </div>
+            </div>
+            <!-- Keyboard hints -->
+            <div style="display: flex; gap: 16px; font-family: var(--font-sans); font-size: 11px; color: var(--text-muted);">
+              <span><span style="display: inline-block; padding: 1px 5px; border: 1px solid var(--border-default); font-family: var(--font-mono); font-size: 10px; font-weight: 600; margin-right: 4px;">A</span>Approve</span>
+              <span><span style="display: inline-block; padding: 1px 5px; border: 1px solid var(--border-default); font-family: var(--font-mono); font-size: 10px; font-weight: 600; margin-right: 4px;">E</span>Edit</span>
+              <span><span style="display: inline-block; padding: 1px 5px; border: 1px solid var(--border-default); font-family: var(--font-mono); font-size: 10px; font-weight: 600; margin-right: 4px;">R</span>Reject</span>
+              <span><span style="display: inline-block; padding: 1px 5px; border: 1px solid var(--border-default); font-family: var(--font-mono); font-size: 10px; font-weight: 600; margin-right: 4px;">S</span>Snooze</span>
+            </div>
+          </div>
+
+          <!-- Email Body -->
+          <div style="flex: 1; overflow-y: auto; padding: 24px;">
+            <div style="max-width: 640px; margin: 0 auto; background: var(--ink-0); border: 1px solid var(--border-subtle);">
+              <!-- Email header -->
+              <div style="padding: 20px 24px; border-bottom: 1px solid var(--border-subtle);">
+                <div style="font-family: var(--font-sans); font-weight: 500; font-size: 15px; color: var(--text-primary); margin-bottom: 8px;">{{ selectedDraft.emailSubject }}</div>
+                <div style="display: flex; gap: 16px; font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">
+                  <span>From: Dana Chen &lt;dana@brightwater.com&gt;</span>
+                  <span>To: {{ selectedDraft.buyerEmail }}</span>
+                </div>
+              </div>
+              <!-- Email content -->
+              <div style="padding: 24px;">
+                {{ selectedDraft.emailBody }}
+              </div>
+              <!-- Claim sources bar -->
+              <div style="padding: 12px 24px; border-top: 1px solid var(--border-subtle); background: var(--ink-50);">
+                <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Data sources used</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                  <sc-for list="{{ selectedDraft.sources }}" as="src" hint-placeholder-count="3">
+                    <span style="padding: 3px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 11px; color: var(--text-secondary); background: var(--ink-0);">{{ src }}</span>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Bar -->
+          <div style="padding: 16px 24px; border-top: 1px solid var(--border-subtle); background: var(--ink-0); display: flex; align-items: center; gap: 12px;">
+            <sc-if value="{{ actionFeedback }}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 8px 16px; background: var(--ink-900); color: var(--ink-0); font-family: var(--font-sans); font-size: 13px; font-weight: 500;">{{ actionFeedback }}</div>
+            </sc-if>
+            <button style="height: 40px; padding: 0 24px; background: var(--ink-900); color: var(--ink-0); border: none; font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer;"
+                    style-hover="background: var(--ink-700);"
+                    onClick="{{ approveDraft }}">Approve &amp; Send</button>
+            <button style="height: 40px; padding: 0 24px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer;"
+                    style-hover="background: var(--ink-50);"
+                    onClick="{{ editDraft }}">Edit &amp; Approve</button>
+            <button style="height: 40px; padding: 0 24px; background: var(--ink-0); color: var(--ink-900); border: 1.5px solid var(--ink-900); font-family: var(--font-sans); font-weight: 500; font-size: 14px; cursor: pointer;"
+                    style-hover="background: var(--ink-50);"
+                    onClick="{{ rejectDraft }}">Reject</button>
+            <div style="flex: 1;"></div>
+            <button style="height: 40px; padding: 0 16px; background: none; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); cursor: pointer;"
+                    style-hover="background: var(--ink-50); color: var(--text-secondary);">Snooze</button>
+          </div>
+        </sc-if>
+
+        <!-- Empty state -->
+        <sc-if value="{{ noSelectedDraft }}" hint-placeholder-val="{{ false }}">
+          <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+            <div style="text-align: center;">
+              <div style="font-family: var(--font-sans); font-size: 15px; color: var(--text-muted); margin-bottom: 4px;">Select a draft to preview</div>
+              <div style="font-family: var(--font-sans); font-size: 13px; color: var(--text-faint);">Use ↑↓ to navigate, A to approve</div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+class Component extends DCLogic {
+  state = { activeNav: 'home', selectedInboxIdx: 0, inboxFilter: 'all', actionFeedback: null, showNotifs: false, accountPaused: false, killActive: false, oooActive: false, notifToggles: { drafts: true, handoffs: true, digest: true, auto: false }, handoffSent: {}, playPaused: {} };
+
+  renderVals() {
+    const { activeNav, selectedInboxIdx, inboxFilter } = this.state;
+    const navItems = [
+      { id: 'home', label: 'Home', badge: null, icon: this.icon('home') },
+      { id: 'plays', label: 'My Plays', badge: null, icon: this.icon('plays') },
+      { id: 'inbox', label: 'Agent Inbox', badge: 7, icon: this.icon('inbox') },
+      { id: 'handoffs', label: 'Handoffs', badge: 3, icon: this.icon('handoffs') },
+      { id: 'accounts', label: 'Accounts', badge: null, icon: this.icon('accounts') },
+      { id: 'settings', label: 'My Settings', badge: null, icon: this.icon('settings') },
+      { id: 'digest', label: 'Weekly Digest', badge: null, icon: this.icon('digest') },
+    ];
+    const styledNav = navItems.map(n => {
+      const isActive = n.id === activeNav;
+      return {
+        ...n,
+        onClick: () => this.setState({ activeNav: n.id, showNotifs: false }),
+        label: React.createElement('span', { style: { color: isActive ? 'var(--ink-900)' : 'var(--text-secondary)', fontWeight: isActive ? 500 : 400 } }, n.label),
+        icon: React.createElement('span', { dangerouslySetInnerHTML: { __html: n.icon }, style: { display: 'flex', alignItems: 'center', justifyContent: 'center', color: isActive ? 'var(--wiz-orange-600)' : 'var(--text-muted)' } }),
+        style: isActive ? 'background: var(--ink-50); border-left: 2px solid var(--wiz-orange-600); padding-left: 18px;' : 'background: transparent; border-left: 2px solid transparent; padding-left: 18px;',
+      };
+    });
+
+    // Home data
+    const summaryCards = [
+      { label: 'Emails sent', value: '14', detail: 'since yesterday' },
+      { label: 'Replies handled', value: '6', detail: 'without you' },
+      { label: 'Orders received', value: '2', detail: '$4,280 total' },
+      { label: 'Drafts waiting', value: '7', detail: '3 are time-sensitive' },
+    ];
+    const drafts = [
+      { buyer: 'Marcus Rivera', account: 'Sagebrook Home', play: 'Open Quote', subject: 'Following up on your quote for the Aster Table Lamp collection — 24 units at $42 each', time: '2 hours ago', urgent: false },
+      { buyer: 'Jenna Whitfield', account: 'Coastal Living Direct', play: 'Speed-to-Lead', subject: 'Thanks for your inquiry about our brass pendant line', time: '18 min ago', urgent: true },
+      { buyer: 'Tom Galloway', account: 'Harbor & Pine', play: 'Pre-Lapse', subject: 'Your usual Riviera sconces are ready to ship', time: '5 hours ago', urgent: false },
+    ];
+    const handoffs = [
+      { buyer: 'Lisa Park', account: 'Lumière Interiors', intent: 'Interested', preview: '"Yes, I\'d like to reorder the same as last time but can you check if the matte black finish is available?"', time: '45 min ago' },
+      { buyer: 'David Nakamura', account: 'Pacific Design Group', intent: 'Question', preview: '"What\'s the lead time on custom orders right now? We need 200 units by November."', time: '3 hours ago' },
+      { buyer: 'Rachel Torres', account: 'Desert Modern Co.', intent: 'Wrong person', preview: '"I don\'t handle purchasing anymore — please reach out to Sam Okafor."', time: '6 hours ago' },
+    ];
+    const activityFeed = [
+      { description: 'Sent reorder reminder', account: 'Meridian Home Décor', play: 'Pre-Lapse', time: '9:42 AM' },
+      { description: 'Handled OOO reply — rescheduled to Oct 14', account: 'Beacon & Birch', play: 'SKU Replenishment', time: '9:18 AM' },
+      { description: 'Sent quote follow-up (2nd touch)', account: 'Artisan Wholesale', play: 'Open Quote', time: '8:55 AM' },
+      { description: 'Suppressed — order placed yesterday', account: 'Golden State Imports', play: 'Pre-Lapse', time: '8:30 AM' },
+      { description: 'Handled unsubscribe request', account: 'Lakeview Supply', play: 'Winback', time: '8:12 AM' },
+      { description: 'Sent speed-to-lead response', account: 'Atelier South', play: 'Speed-to-Lead', time: '7:58 AM' },
+      { description: 'Created draft — awaiting approval', account: 'Coastal Living Direct', play: 'Speed-to-Lead', time: '7:45 AM' },
+      { description: 'Exited play — quote converted to order', account: 'Crestline Furnishings', play: 'Open Quote', time: 'Yesterday, 6:30 PM' },
+    ];
+
+    // Inbox data
+    const allInboxDrafts = [
+      { id: 0, buyer: 'Jenna Whitfield', account: 'Coastal Living Direct', play: 'Speed-to-Lead', subject: 'Re: Brass pendant line inquiry', time: '18 min ago', urgent: true, expiry: 'Expires in 3h 42m', sensitivity: 'Own data', buyerEmail: 'jenna@coastalliving.com', emailSubject: 'Thanks for your interest in our brass pendant collection', sources: ['Lead form (WizShop)', 'Catalogue (SKU inventory)', 'Price list (current)'], emailKey: 'jenna' },
+      { id: 1, buyer: 'Amara Osei', account: 'Bloom & Branch', play: 'Speed-to-Lead', subject: 'Welcome — here\'s our wholesale catalogue', time: '28 min ago', urgent: true, expiry: 'Expires in 3h 32m', sensitivity: 'Own data', buyerEmail: 'amara@bloomandbranch.com', emailSubject: 'Welcome to Brightwater Lighting — here\'s what we carry', sources: ['Lead form (WizShop)', 'Catalogue (featured)'], emailKey: 'amara' },
+      { id: 2, buyer: 'Marcus Rivera', account: 'Sagebrook Home', play: 'Open Quote', subject: 'Following up on Aster Table Lamp quote', time: '2 hours ago', urgent: false, expiry: 'Expires in 70h', sensitivity: 'Own data', buyerEmail: 'mrivera@sagebrook.com', emailSubject: 'Your quote for the Aster Table Lamp collection', sources: ['Quote #Q-4821 (WizOrder)', 'Order history', 'Price list (current)'], emailKey: 'marcus' },
+      { id: 3, buyer: 'Tom Galloway', account: 'Harbor & Pine', play: 'Pre-Lapse', subject: 'Your usual Riviera sconces are ready to ship', time: '5 hours ago', urgent: false, expiry: 'Expires in 67h', sensitivity: 'Own + Live', buyerEmail: 'tom@harborandpine.com', emailSubject: 'It\'s been a while — your Riviera sconces are ready', sources: ['Order history (last 18 months)', 'Inventory feed (live)', 'Reorder interval (computed)'], emailKey: 'tom' },
+      { id: 4, buyer: 'Nina Castillo', account: 'Soleil Home', play: 'SKU Replenishment', subject: 'Time to restock your Meridian floor lamp', time: '6 hours ago', urgent: false, expiry: null, sensitivity: 'Own data', buyerEmail: 'nina@soleilhome.com', emailSubject: 'Restock reminder: Meridian Floor Lamp — Walnut', sources: ['Order history', 'SKU reorder interval (computed)', 'Inventory feed'], emailKey: 'nina' },
+      { id: 5, buyer: 'Greg Stanton', account: 'Lakeshore Design', play: 'Open Quote', subject: 'Your outdoor lighting quote is still open', time: '8 hours ago', urgent: false, expiry: 'Expires in 64h', sensitivity: 'Own data', buyerEmail: 'greg@lakeshoredesign.com', emailSubject: 'Following up on your outdoor lighting quote', sources: ['Quote #Q-4799 (WizOrder)', 'Price list (current)'], emailKey: 'greg' },
+      { id: 6, buyer: 'Pat Holbrook', account: 'Summit Interiors', play: 'Winback', subject: 'We\'d love to work together again', time: '12 hours ago', urgent: false, expiry: null, sensitivity: 'Own + Cohort', buyerEmail: 'pat@summitinteriors.com', emailSubject: 'It\'s been a while — here\'s what\'s new at Brightwater', sources: ['Order history (12 months)', 'Cohort reorder rate', 'Content: What\'s New (Sep 2026)'], emailKey: 'pat' },
+    ];
+    const filtered = inboxFilter === 'all' ? allInboxDrafts : inboxFilter === 'speed' ? allInboxDrafts.filter(d => d.urgent) : inboxFilter === 'expiring' ? allInboxDrafts.filter(d => d.expiry) : allInboxDrafts;
+    const inboxDrafts = filtered.map(d => ({
+      ...d,
+      selected: d.id === selectedInboxIdx,
+      selectedStyle: d.id === selectedInboxIdx ? 'background: var(--ink-50); border-left: 2px solid var(--wiz-orange-600);' : 'border-left: 2px solid transparent;',
+      onSelect: () => this.setState({ selectedInboxIdx: d.id }),
+    }));
+    const sel = allInboxDrafts.find(d => d.id === selectedInboxIdx) || allInboxDrafts[0];
+    const selectedDraft = sel ? {
+      ...sel,
+      emailBody: React.createElement('div', { dangerouslySetInnerHTML: { __html: this.makeEmail(sel.emailKey) }, style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } }),
+    } : null;
+    const inboxFilters = [
+      { label: inboxFilter === 'all' ? '● All' : 'All', onClick: () => this.setState({ inboxFilter: 'all' }) },
+      { label: inboxFilter === 'speed' ? '● Speed' : 'Speed', onClick: () => this.setState({ inboxFilter: 'speed' }) },
+      { label: inboxFilter === 'expiring' ? '● Expiring' : 'Expiring', onClick: () => this.setState({ inboxFilter: 'expiring' }) },
+    ];
+
+    // Handoff data
+    const allHandoffs = [
+      { id: 0, buyer: 'Lisa Park', account: 'Lumière Interiors', buyerEmail: 'lisa@lumiere-interiors.com', intent: 'Interested', play: 'Pre-Lapse', preview: '"Yes, I\'d like to reorder the same as last time but can you check if the matte black finish is available?"', time: '45 min ago', reason: 'Buyer expressed purchase intent with a product availability question the agent cannot confirm without live stock data for this finish.',
+        buyerReplyBody: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } }, React.createElement('p', null, 'Hi Dana,'), React.createElement('p', null, 'Yes, I\'d like to reorder the same as last time — 18 units of the Riviera sconces. But can you check if the matte black finish is back in stock? Last time we had to go with brushed nickel because matte black was out.'), React.createElement('p', null, 'Also, any chance we can get the same freight deal as last quarter?'), React.createElement('p', null, 'Thanks,'), React.createElement('p', null, 'Lisa')),
+        buyerReplyTime: 'Sep 28, 2026 at 9:15 AM',
+        hasLinks: true, links: ['Reorder cart: 18× Riviera Sconce — Brushed Nickel', 'Quote builder'],
+        hasContactUpdate: false, newContactName: '', newContactEmail: '',
+        replyBody: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } }, React.createElement('p', null, 'Hi Lisa,'), React.createElement('p', null, 'Great to hear you\'re ready to reorder! I\'ve set up a cart with 18 units of the Riviera Wall Sconce for you.'), React.createElement('p', null, 'Let me confirm availability on the matte black finish and get back to you shortly. If it\'s in stock, I\'ll swap the cart over.'), React.createElement('p', null, 'Regarding freight — I\'ll check what we can do and include that in my next reply.'), React.createElement('p', null, 'Best,'), React.createElement('p', null, 'Dana')),
+        sources: ['Order history (Lumière)', 'Inventory feed (pending check)', 'Freight terms'] },
+      { id: 1, buyer: 'David Nakamura', account: 'Pacific Design Group', buyerEmail: 'david@pacificdesign.com', intent: 'Question', play: 'Open Quote', preview: '"What\'s the lead time on custom orders right now? We need 200 units by November."', time: '3 hours ago', reason: 'Buyer asked about custom order lead times — requires operations input the agent doesn\'t have.',
+        buyerReplyBody: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } }, React.createElement('p', null, 'Hi Dana,'), React.createElement('p', null, 'Thanks for the quote on the Coastal Path Lights. Before we commit, what\'s the lead time on a custom order of 200 units? We\'re outfitting a new hotel project and need delivery by mid-November at the latest.'), React.createElement('p', null, 'Also — can we get them in a custom bronze finish (RAL 8028)?'), React.createElement('p', null, 'David')),
+        buyerReplyTime: 'Sep 28, 2026 at 7:02 AM',
+        hasLinks: true, links: ['Quote #Q-4815 — 200× Coastal Path Light'],
+        hasContactUpdate: false, newContactName: '', newContactEmail: '',
+        replyBody: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } }, React.createElement('p', null, 'Hi David,'), React.createElement('p', null, 'Thanks for the details on the hotel project. For a custom run of 200 units, our standard lead time is 6–8 weeks from order confirmation.'), React.createElement('p', null, 'I\'m checking with our production team on the custom bronze finish (RAL 8028) — I\'ll have an answer for you by tomorrow.'), React.createElement('p', null, 'Based on that timeline, we\'d need to lock in the order by early October to hit mid-November delivery.'), React.createElement('p', null, 'Best,'), React.createElement('p', null, 'Dana')),
+        sources: ['Quote #Q-4815 (WizOrder)', 'Standard lead times', 'Custom finish availability (pending)'] },
+      { id: 2, buyer: 'Rachel Torres', account: 'Desert Modern Co.', buyerEmail: 'rachel@desertmodern.com', intent: 'Wrong person', play: 'Winback', preview: '"I don\'t handle purchasing anymore — please reach out to Sam Okafor."', time: '6 hours ago', reason: 'Buyer indicated a contact change — Sam Okafor is now the purchasing contact. Contact update form pre-filled.',
+        buyerReplyBody: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } }, React.createElement('p', null, 'Hi Dana,'), React.createElement('p', null, 'I moved to the design team last month and don\'t handle purchasing anymore. You\'ll want to reach out to Sam Okafor — he took over my role.'), React.createElement('p', null, 'His email is sam.okafor@desertmodern.com'), React.createElement('p', null, 'Best,'), React.createElement('p', null, 'Rachel')),
+        buyerReplyTime: 'Sep 28, 2026 at 4:12 AM',
+        hasLinks: false, links: [],
+        hasContactUpdate: true, newContactName: 'Sam Okafor', newContactEmail: 'sam.okafor@desertmodern.com',
+        replyBody: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } }, React.createElement('p', null, 'Hi Rachel,'), React.createElement('p', null, 'Thanks for letting me know — I\'ll update our records and reach out to Sam directly.'), React.createElement('p', null, 'Best of luck on the design team!'), React.createElement('p', null, 'Best,'), React.createElement('p', null, 'Dana')),
+        sources: ['Contact record (Desert Modern Co.)', 'Reply classification'] },
+      { id: 3, buyer: 'Kenji Sato', account: 'Zen Living Wholesale', buyerEmail: 'kenji@zenliving.com', intent: 'Interested', play: 'SKU Replenishment', preview: '"Same quantity as last time, but do you have the walnut finish in the larger size?"', time: '8 hours ago', reason: 'Buyer wants to reorder with a product variant question — agent needs confirmation on size availability.',
+        buyerReplyBody: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } }, React.createElement('p', null, 'Hi Dana,'), React.createElement('p', null, 'Perfect timing on the reminder. Yes, same quantity as last time on the Meridian floor lamp.'), React.createElement('p', null, 'But this time, do you have it in the walnut finish in the 62" size? My clients have been asking for the taller version.'), React.createElement('p', null, 'Kenji')),
+        buyerReplyTime: 'Sep 28, 2026 at 2:30 AM',
+        hasLinks: true, links: ['Reorder cart: 8× Meridian Floor Lamp — Walnut (standard)', 'Product catalogue: Meridian range'],
+        hasContactUpdate: false, newContactName: '', newContactEmail: '',
+        replyBody: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } }, React.createElement('p', null, 'Hi Kenji,'), React.createElement('p', null, 'Great to hear! I\'ve set up your usual order of 8 units of the Meridian Floor Lamp in walnut.'), React.createElement('p', null, 'I\'m checking on the 62" version — we carry the standard 58" in walnut. Let me confirm whether the taller size is available in that finish and I\'ll update the cart accordingly.'), React.createElement('p', null, 'Best,'), React.createElement('p', null, 'Dana')),
+        sources: ['Order history (Zen Living)', 'Inventory feed', 'Product catalogue'] },
+      { id: 4, buyer: 'Megan Tran', account: 'Oakwood Interiors', buyerEmail: 'megan@oakwoodinteriors.com', intent: 'Question', play: 'Pre-Lapse', preview: '"Can we set up net 45 terms? Our cash flow is seasonal."', time: '14 hours ago', reason: 'Buyer is asking about payment terms — requires admin/finance approval.',
+        buyerReplyBody: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } }, React.createElement('p', null, 'Dana,'), React.createElement('p', null, 'We\'re interested in placing a larger order this quarter, but our cash flow is seasonal. Can we set up net 45 terms instead of net 30?'), React.createElement('p', null, 'If that works, I\'m looking at 40+ units across your sconce and pendant lines.'), React.createElement('p', null, 'Megan')),
+        buyerReplyTime: 'Sep 27, 2026 at 6:45 PM',
+        hasLinks: false, links: [],
+        hasContactUpdate: false, newContactName: '', newContactEmail: '',
+        replyBody: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } }, React.createElement('p', null, 'Hi Megan,'), React.createElement('p', null, 'Thanks for thinking of us for a larger order — that\'s great to hear.'), React.createElement('p', null, 'I\'m looking into net 45 terms for you and will follow up once I have an answer. In the meantime, I can start putting together a quote for the sconces and pendants you\'re considering.'), React.createElement('p', null, 'Best,'), React.createElement('p', null, 'Dana')),
+        sources: ['Order history (Oakwood)', 'Payment terms (current: Net 30)'] },
+    ];
+    const selectedHoIdx = this.state.selectedHandoffIdx ?? 0;
+    const handoffItems = allHandoffs.map(h => ({
+      ...h,
+      selectedStyle: h.id === selectedHoIdx ? 'background: var(--ink-50); border-left: 2px solid var(--wiz-orange-600);' : 'border-left: 2px solid transparent;',
+      onSelect: () => this.setState({ selectedHandoffIdx: h.id }),
+    }));
+    const selectedHandoff = allHandoffs.find(h => h.id === selectedHoIdx) || allHandoffs[0];
+
+    return {
+      navItems: styledNav,
+      showHome: activeNav === 'home',
+      showInbox: activeNav === 'inbox',
+      showHandoffs: activeNav === 'handoffs',
+      showAccounts: activeNav === 'accounts' && !this.state.viewingAccount,
+      showAccountDetail: activeNav === 'accounts' && !!this.state.viewingAccount,
+      showPlays: activeNav === 'plays' && !this.state.viewingPlay,
+      showPlayDetail: activeNav === 'plays' && !!this.state.viewingPlay,
+      showSettings: activeNav === 'settings',
+      showDigest: activeNav === 'digest',
+      comingUpText: '16 emails scheduled this week',
+      goToPlays: () => this.setState({ activeNav: 'plays' }),
+      summaryCards, drafts, handoffs, activityFeed,
+      notifCount: 10,
+      toggleTenantMenu: () => {}, 
+      toggleNotifications: () => this.setState(s => ({ showNotifs: !s.showNotifs })),
+      togglePersonaMenu: () => { window.location = 'WizSDR Admin.dc.html'; },
+      goToSimulator: () => { window.location = 'WizSDR Simulator.dc.html'; },
+      showNotifs: this.state.showNotifs,
+      notifItems: [
+        { text: 'New draft: Jenna Whitfield (Speed-to-Lead)', time: '18 min ago', dotColor: 'var(--wiz-orange-600)', onClick: () => this.setState({ activeNav: 'inbox', selectedInboxIdx: 0, showNotifs: false }) },
+        { text: 'New draft: Amara Osei (Speed-to-Lead)', time: '28 min ago', dotColor: 'var(--wiz-orange-600)', onClick: () => this.setState({ activeNav: 'inbox', selectedInboxIdx: 1, showNotifs: false }) },
+        { text: 'Handoff: Lisa Park replied — "interested"', time: '45 min ago', dotColor: 'var(--wiz-orange-600)', onClick: () => this.setState({ activeNav: 'handoffs', selectedHandoffIdx: 0, showNotifs: false }) },
+        { text: 'Agent handled OOO reply for Beacon & Birch', time: '1 hour ago', dotColor: 'var(--ink-300)', onClick: () => this.setState({ showNotifs: false }) },
+        { text: 'Handoff: David Nakamura — lead time question', time: '3 hours ago', dotColor: 'var(--ink-300)', onClick: () => this.setState({ activeNav: 'handoffs', selectedHandoffIdx: 1, showNotifs: false }) },
+        { text: 'Order placed: Crestline Furnishings ($2,340)', time: 'Yesterday', dotColor: 'var(--ink-300)', onClick: () => this.setState({ showNotifs: false }) },
+        { text: 'Agent sent 6 emails on your behalf', time: 'Yesterday', dotColor: 'var(--ink-300)', onClick: () => this.setState({ showNotifs: false }) },
+      ],
+      inboxCount: allInboxDrafts.length, inboxFilters, inboxDrafts, selectedDraft,
+      noSelectedDraft: !selectedDraft,
+      approveDraft: () => { this.setState({ actionFeedback: 'approved', selectedInboxIdx: Math.min(selectedInboxIdx + 1, allInboxDrafts.length - 1) }); setTimeout(() => this.setState({ actionFeedback: null }), 2000); },
+      editDraft: () => { this.setState({ actionFeedback: 'editing' }); setTimeout(() => this.setState({ actionFeedback: null }), 2000); },
+      rejectDraft: () => { this.setState({ actionFeedback: 'rejected' }); setTimeout(() => this.setState({ actionFeedback: null }), 2000); },
+      actionFeedback: this.state.actionFeedback,
+      handoffCount: allHandoffs.length, handoffItems, selectedHandoff,
+      sendHandoffLabel: this.state.handoffSent[selectedHoIdx] ? '✓ Sent' : 'Send Reply',
+      sendHandoff: () => { this.setState(s => ({ handoffSent: { ...s.handoffSent, [selectedHoIdx]: true } })); setTimeout(() => { const next = allHandoffs.find(h => h.id > selectedHoIdx); if (next) this.setState({ selectedHandoffIdx: next.id }); }, 1500); },
+      dismissHandoff: () => { const next = allHandoffs.find(h => h.id > selectedHoIdx); if (next) this.setState({ selectedHandoffIdx: next.id }); },
+      // Accounts
+      // R8 My Plays
+      myPlays: [
+        { name: 'Catch customers before they slip away', purpose: 'Emails accounts whose reorder rhythm is overdue, nudging them back before they lapse.', accounts: '8', sendsWeek: '6', myLevel: 'Auto-send', revenue: '$4,180', status: 'Live', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);', progressWidth: '100%', progressLabel: 'L3 earned', onClick: () => this.setState({ viewingPlay: 'prelapse' }) },
+        { name: 'Follow up on open quotes', purpose: 'Reminds buyers about quotes that haven\'t converted yet, with pricing details.', accounts: '4', sendsWeek: '3', myLevel: 'Drafts for approval', revenue: '$2,340', status: 'Live', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);', progressWidth: '47%', progressLabel: '14 of 30 approvals', onClick: () => this.setState({ viewingPlay: 'openquote' }) },
+        { name: 'Restock reminders by SKU', purpose: 'Nudges accounts when specific products they buy regularly are due for reorder.', accounts: '5', sendsWeek: '4', myLevel: 'Drafts for approval', revenue: '$1,480', status: 'Live', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);', progressWidth: '73%', progressLabel: '22 of 30 approvals', onClick: () => this.setState({ viewingPlay: 'skurepl' }) },
+        { name: 'Respond to new leads fast', purpose: 'Sends a personalized welcome within minutes of a new lead or portal signup.', accounts: '2', sendsWeek: '2', myLevel: 'Drafts for approval', revenue: '$2,100', status: 'Live', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);', progressWidth: '33%', progressLabel: '10 of 30 approvals', onClick: () => this.setState({ viewingPlay: 'speedlead' }) },
+        { name: 'Win back lapsed accounts', purpose: 'Re-engages accounts that haven\'t ordered in 90–180 days with what\'s new and a comeback offer.', accounts: '3', sendsWeek: '1', myLevel: 'Drafts for approval', revenue: '$0', status: 'Warm-up', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-muted);', progressWidth: '27%', progressLabel: '8 of 30 approvals', onClick: () => this.setState({ viewingPlay: 'winback' }) },
+      ],
+      goBackToPlays: () => this.setState({ viewingPlay: null }),
+      playPauseLabel: this.state.playPaused[this.state.viewingPlay] ? 'Resume for my book' : 'Pause for my book',
+      togglePlayPause: () => this.setState(s => ({ playPaused: { ...s.playPaused, [s.viewingPlay]: !s.playPaused[s.viewingPlay] } })),
+      playDetail: this.getPlayDetail(),
+      // Settings
+      settingsPlays: [
+        { name: 'Open Quote Follow-up', myLevel: 'Drafts for approval', ceiling: 'L4', status: '14 of 30 approvals toward auto-send' },
+        { name: 'Pre-Lapse Cadence', myLevel: 'Sends with spot checks', ceiling: 'L4', status: 'Earned L3 on Aug 10 — 91% as-is rate' },
+        { name: 'SKU Replenishment', myLevel: 'Drafts for approval', ceiling: 'L3', status: '22 of 30 approvals toward auto-send' },
+        { name: 'Speed-to-Lead', myLevel: 'Drafts for approval', ceiling: 'L3', status: 'Speed play — admin ceiling at L3' },
+        { name: 'Winback', myLevel: 'Drafts for approval', ceiling: 'L4', status: '8 of 30 approvals toward auto-send' },
+      ],
+      oooStatus: this.state.oooActive ? 'Out of office is on' : 'Out of office is off',
+      oooDetail: this.state.oooActive ? 'All plays are paused. The agent will resume when you turn this off.' : 'All plays are running normally.',
+      oooButtonLabel: this.state.oooActive ? 'Turn off' : 'Set out of office',
+      toggleOoo: () => this.setState(s => ({ oooActive: !s.oooActive })),
+      notifSettings: (() => {
+        const t = this.state.notifToggles;
+        const keys = ['drafts', 'handoffs', 'digest', 'auto'];
+        const labels = ['New drafts', 'Handoffs', 'Weekly digest email', 'Autonomous actions'];
+        const descs = ['Notify when new drafts arrive in your inbox', 'Notify when a buyer reply needs your attention', 'Receive the digest summary by email every Monday', 'Notify when the agent sends without approval'];
+        return keys.map((k, i) => ({
+          label: labels[i], description: descs[i],
+          toggleBg: t[k] ? 'background: var(--ink-900);' : 'background: var(--ink-0);',
+          togglePos: t[k] ? 'left: 21px;' : 'left: 3px;',
+          onToggle: () => this.setState(s => ({ notifToggles: { ...s.notifToggles, [k]: !s.notifToggles[k] } })),
+        }));
+      })(),
+      // Digest
+      digestStats: [
+        { label: 'Emails sent', value: '47', sub: '+12 vs last week', color: 'var(--text-primary)' },
+        { label: 'Replies handled', value: '18', sub: 'without your input', color: 'var(--text-primary)' },
+        { label: 'Orders received', value: '6', sub: '$12,840 total', color: 'var(--text-primary)' },
+        { label: 'Your touches', value: '15', sub: '7 approvals, 8 edits', color: 'var(--text-primary)' },
+        { label: 'Incremental rev', value: '$8,420', sub: 'vs holdout', color: 'var(--wiz-orange-600)' },
+      ],
+      digestByPlay: [
+        { play: 'Pre-Lapse', count: '16', barWidth: '100%' },
+        { play: 'Open Quote', count: '12', barWidth: '75%' },
+        { play: 'SKU Replenishment', count: '9', barWidth: '56%' },
+        { play: 'Speed-to-Lead', count: '6', barWidth: '38%' },
+        { play: 'Winback', count: '4', barWidth: '25%' },
+      ],
+      digestReplies: [
+        { type: 'Out-of-office — rescheduled', count: '8' },
+        { type: 'Order placed — exited play', count: '4' },
+        { type: 'Unsubscribe — suppressed', count: '2' },
+        { type: '"Not now" — paused', count: '3' },
+        { type: 'Complaint — suppressed & flagged', count: '1' },
+      ],
+      digestTopAccounts: [
+        { name: 'Sagebrook Home', event: 'Converted open quote → order', revenue: '$2,340' },
+        { name: 'Lumière Interiors', event: 'Reorder from Pre-Lapse sequence', revenue: '$1,890' },
+        { name: 'Pacific Design Group', event: 'New order from quote follow-up', revenue: '$3,200' },
+        { name: 'Zen Living Wholesale', event: 'SKU replenishment reorder', revenue: '$1,480' },
+        { name: 'Atelier South', event: 'Speed-to-Lead conversion (new account)', revenue: '$2,100' },
+      ],
+      // Account detail
+      goBackToAccounts: () => this.setState({ viewingAccount: null }),
+      goToAccountPlay: () => this.setState({ activeNav: 'plays', viewingPlay: 'openquote', viewingAccount: null }),
+      killActive: this.state.killActive,
+      killLabel: this.state.killActive ? 'Resume agent' : 'Kill switch',
+      pauseLabel: this.state.accountPaused ? 'Resume' : 'Pause 14 days',
+      togglePause: () => this.setState(s => ({ accountPaused: !s.accountPaused })),
+      toggleKillSwitch: () => this.setState(s => ({ killActive: !s.killActive })),
+      accountTimeline: this.getTimeline(),
+      accountTotal: 12,
+      accountRows: [
+        { name: 'Coastal Living Direct', region: 'Southeast', contact: 'Jenna Whitfield', onClick: () => this.setState({ viewingAccount: 'coastal' }), lastOrder: 'Sep 12', activePlay: 'Speed-to-Lead', noPlay: false, lifetime: '$28,400', status: 'Needs you', statusStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'Sagebrook Home', region: 'Northeast', contact: 'Marcus Rivera', onClick: () => this.setState({ viewingAccount: 'sagebrook' }), lastOrder: 'Sep 8', activePlay: 'Open Quote', noPlay: false, lifetime: '$64,200', status: 'Needs you', statusStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'Harbor & Pine', onClick: () => this.setState({ viewingAccount: 'harbor' }), region: 'Pacific NW', contact: 'Tom Galloway', lastOrder: 'Aug 2', activePlay: 'Pre-Lapse', noPlay: false, lifetime: '$41,800', status: 'Needs you', statusStyle: 'background: var(--ink-900); color: var(--ink-0);' },
+        { name: 'Lumière Interiors', onClick: () => this.setState({ viewingAccount: 'lumiere' }), region: 'Midwest', contact: 'Lisa Park', lastOrder: 'Aug 18', activePlay: 'Pre-Lapse', noPlay: false, lifetime: '$52,100', status: 'Live', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);' },
+        { name: 'Pacific Design Group', onClick: () => this.setState({ viewingAccount: 'pacific' }), region: 'West Coast', contact: 'David Nakamura', lastOrder: 'Sep 15', activePlay: 'Open Quote', noPlay: false, lifetime: '$38,700', status: 'Live', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);' },
+        { name: 'Soleil Home', onClick: () => this.setState({ viewingAccount: 'soleil' }), region: 'Southwest', contact: 'Nina Castillo', lastOrder: 'Jul 28', activePlay: 'SKU Replenishment', noPlay: false, lifetime: '$19,600', status: 'Live', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);' },
+        { name: 'Desert Modern Co.', onClick: () => this.setState({ viewingAccount: 'desert' }), region: 'Southwest', contact: 'Rachel Torres', lastOrder: 'Mar 4', activePlay: 'Winback', noPlay: false, lifetime: '$22,900', status: 'Live', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);' },
+        { name: 'Zen Living Wholesale', onClick: () => this.setState({ viewingAccount: 'zen' }), region: 'West Coast', contact: 'Kenji Sato', lastOrder: 'Aug 22', activePlay: 'SKU Replenishment', noPlay: false, lifetime: '$33,500', status: 'Live', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);' },
+        { name: 'Bloom & Branch', onClick: () => this.setState({ viewingAccount: 'bloom' }), region: 'Southeast', contact: 'Amara Osei', lastOrder: '—', activePlay: 'Speed-to-Lead', noPlay: false, lifetime: '$0', status: 'Warm-up', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-muted);' },
+        { name: 'Meridian Home Décor', onClick: () => this.setState({ viewingAccount: 'meridian' }), region: 'Northeast', contact: 'Frank Ellis', lastOrder: 'Sep 20', activePlay: null, noPlay: true, lifetime: '$86,400', status: 'Paused', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-muted);' },
+        { name: 'Lakeview Supply', onClick: () => this.setState({ viewingAccount: 'lakeview' }), region: 'Midwest', contact: 'Beth Connors', lastOrder: 'Jun 11', activePlay: null, noPlay: true, lifetime: '$12,300', status: 'Manual only', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-muted);' },
+        { name: 'Summit Interiors', onClick: () => this.setState({ viewingAccount: 'summit' }), region: 'Mountain', contact: 'Pat Holbrook', lastOrder: 'Feb 14', activePlay: 'Winback', noPlay: false, lifetime: '$8,900', status: 'Live', statusStyle: 'border: 1px solid var(--border-default); color: var(--text-secondary);' },
+      ],
+    };
+  }
+
+  getPlayDetail() {
+    const play = this.state.viewingPlay || 'prelapse';
+    const details = {
+      prelapse: {
+        name: 'Catch customers before they slip away', category: 'Replenishment', ceiling: 'L4',
+        description: 'Monitors each account\'s reorder rhythm. When they\'re overdue, the agent sends up to 3 emails — starting with their usual products, then new arrivals, then stock urgency. If they still don\'t order, the play hands off to you.',
+        myLevel: 'Sends with spot checks (L3)', progressWidth: '100%', progressLabel: 'Earned L3 — 91% as-is rate',
+        stats: [
+          { label: 'Enrolled', value: '8', color: 'var(--text-primary)' },
+          { label: 'Sent this month', value: '22', color: 'var(--text-primary)' },
+          { label: 'Converted', value: '4', color: 'var(--text-primary)' },
+          { label: 'Revenue', value: '$4,180', color: 'var(--wiz-orange-600)' },
+          { label: 'Handoff rate', value: '12%', color: 'var(--text-primary)' },
+        ],
+        steps: [
+          { num: '1', label: 'Email', detail: 'Top reorder SKUs + cart link', dotStyle: '' },
+          { num: '⏱', label: 'Wait', detail: 'Until 1.4× rhythm', dotStyle: 'border-style: dashed;' },
+          { num: '2', label: 'Email', detail: 'New arrivals since last order', dotStyle: '' },
+          { num: '⏱', label: 'Wait', detail: 'Until 1.6× rhythm', dotStyle: 'border-style: dashed;' },
+          { num: '3', label: 'Email', detail: 'Stock urgency + lead time', dotStyle: '' },
+          { num: '→', label: 'Handoff', detail: 'Approaching lapse', dotStyle: 'background: var(--ink-100);' },
+        ],
+        sampleSubject: 'It\'s been a while — your Aster Table Lamps are ready',
+        sampleBody: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } },
+          React.createElement('p', null, 'Hi Marcus,'),
+          React.createElement('p', null, 'It\'s been about 6 weeks since your last order — a bit longer than your usual pace. Your go-to items are in stock and ready to ship:'),
+          React.createElement('p', { style: { padding: '12px 16px', borderLeft: '2px solid var(--border-default)', margin: '12px 0', background: 'var(--ink-50)' } },
+            React.createElement('strong', null, 'Aster Table Lamp — Brass'), ' · Last ordered: 24 units', React.createElement('br'),
+            'In stock: 142 units · Ships same day', React.createElement('br'), React.createElement('br'),
+            React.createElement('strong', null, 'Riviera Wall Sconce — Brushed Nickel'), ' · Last ordered: 12 units', React.createElement('br'),
+            'In stock: 64 units · Ships same day'
+          ),
+          React.createElement('p', null, 'I can put together your usual order if you\'d like — just say the word.'),
+          React.createElement('p', null, 'Best,', React.createElement('br'), 'Dana Chen', React.createElement('br'), 'Brightwater Lighting Co.')
+        ),
+        enrolledCount: 8,
+        enrolled: [
+          { account: 'Harbor & Pine', step: 'Email 1', nextSend: 'Today', reason: 'Cadence ratio 1.3× (52d vs 40d median)' },
+          { account: 'Sagebrook Home', step: 'Wait 2', nextSend: 'Oct 2', reason: 'Cadence ratio 1.25× (40d vs 32d median)' },
+          { account: 'Zen Living Wholesale', step: 'Email 2', nextSend: 'Tomorrow', reason: 'Cadence ratio 1.4× (49d vs 35d median)' },
+          { account: 'Soleil Home', step: 'Email 1', nextSend: 'Oct 1', reason: 'Cadence ratio 1.28× (58d vs 45d median)' },
+          { account: 'Oakwood Interiors', step: 'Wait 1', nextSend: 'Oct 4', reason: 'Cadence ratio 1.26× (44d vs 35d median)' },
+          { account: 'Artisan Wholesale', step: 'Email 3', nextSend: 'Today', reason: 'Cadence ratio 1.62× (65d vs 40d median)' },
+          { account: 'Beacon & Birch', step: 'Wait 1', nextSend: 'Oct 5', reason: 'Cadence ratio 1.3× (39d vs 30d median)' },
+          { account: 'Meridian Home Décor', step: 'Email 1', nextSend: 'Oct 3', reason: 'Cadence ratio 1.27× (38d vs 30d median)' },
+        ],
+        exited: [
+          { account: 'Sagebrook Home', reason: 'Order placed — $2,340', revenue: '$2,340', date: 'Sep 8' },
+          { account: 'Lumière Interiors', reason: 'Order placed — $1,890', revenue: '$1,890', date: 'Sep 5' },
+          { account: 'Golden State Imports', reason: 'Order placed — $950', revenue: '$950', date: 'Sep 2' },
+          { account: 'Crestline Furnishings', reason: 'Handed off — no response after 3 emails', revenue: null, date: 'Aug 28' },
+        ],
+      },
+    };
+    return details[play] || details.prelapse;
+  }
+
+  getTimeline() {
+    const expanded = this.state.expandedWhy ?? {};
+    const toggle = (id) => this.setState(s => ({ expandedWhy: { ...(s.expandedWhy || {}), [id]: !(s.expandedWhy || {})[id] } }));
+    const items = [
+      { id: 0, action: 'Draft awaiting approval', play: 'Open Quote', detail: 'Quote follow-up email for Aster Table Lamp — 24 units at $42 each', time: 'Today, 8:30 AM', dotStyle: 'background: var(--wiz-orange-600);', whyText: 'Quote #Q-4821 was created 7 days ago and has not been converted. The Open Quote play triggers a follow-up at day 7. Step risk: Own data only. Autonomy level: L2 (draft-and-approve) — this rep has not yet earned L3 for this play.', whyFacts: ['Quote #Q-4821: $1,008', 'Quote age: 7 days', 'Play threshold: 7 days', 'Autonomy: L2 (14 of 30 approvals)'] },
+      { id: 1, action: 'Sent quote follow-up (1st touch)', play: 'Open Quote', detail: 'Reminded Marcus about the open quote with pricing summary', time: 'Sep 24, 2:15 PM', dotStyle: 'background: var(--ink-400);', whyText: 'Quote #Q-4821 reached 3 days without conversion. First touch sent at L2 after rep approval. All facts resolved from WizOrder quote data.', whyFacts: ['Quote #Q-4821', 'Approval: approved as-is by Dana', 'Send latency: 4 min after approval'] },
+      { id: 2, action: 'Enrolled in Open Quote', play: 'Open Quote', detail: 'Quote #Q-4821 created — contact enrolled in follow-up sequence', time: 'Sep 21, 11:42 AM', dotStyle: 'background: var(--ink-400);', whyText: 'Marcus created quote #Q-4821 via WizOrder. Quote value $1,008 exceeded the $200 minimum. No other active play for this contact. Frequency check passed (last agent email: Aug 28).', whyFacts: ['Quote value: $1,008', 'Min threshold: $200', 'Last email: 24 days ago', 'Frequency: 0 of 2 weekly cap'] },
+      { id: 3, action: 'Exited Pre-Lapse — order placed', play: 'Pre-Lapse', detail: 'Order #ORD-2847 for $2,340 closed the pre-lapse sequence', time: 'Sep 8, 4:20 PM', dotStyle: 'background: var(--ink-400);', whyText: 'Order #ORD-2847 was placed by Marcus, satisfying the exit condition for the Pre-Lapse play. Sequence terminated at step 2 of 3.', whyFacts: ['Order #ORD-2847: $2,340', 'Exit condition: order_placed', 'Steps completed: 2 of 3'] },
+      { id: 4, action: 'Sent reorder reminder (2nd touch)', play: 'Pre-Lapse', detail: 'Mentioned new arrivals since last order to encourage reorder', time: 'Sep 5, 9:00 AM', dotStyle: 'background: var(--ink-400);', whyText: 'Cadence ratio reached 1.4× (45 days vs 32-day median). Second email in the Pre-Lapse sequence. New arrivals fact resolved from catalogue: 3 new products since last order.', whyFacts: ['Cadence ratio: 1.4×', 'Median interval: 32 days', 'Days since order: 45', 'New arrivals: 3 SKUs'] },
+      { id: 5, action: 'Sent reorder reminder (1st touch)', play: 'Pre-Lapse', detail: 'Reminded about top reorder SKUs with stock availability', time: 'Aug 26, 10:30 AM', dotStyle: 'background: var(--ink-400);', whyText: 'Cadence ratio crossed 1.25× threshold (40 days vs 32-day median). Enrolled and first email sent at L3 (auto-send — this play earned L3 on Aug 10). Top SKU: Aster Table Lamp, 142 in stock.', whyFacts: ['Cadence ratio: 1.25×', 'Autonomy: L3', 'Top SKU stock: 142 units', 'Approval: auto-sent (L3)'] },
+      { id: 6, action: 'Enrolled in Pre-Lapse', play: 'Pre-Lapse', detail: 'Reorder interval exceeded 1.25× threshold', time: 'Aug 26, 10:28 AM', dotStyle: 'background: var(--ink-400);', whyText: 'Daily schedule evaluation found cadence_ratio = 1.25 (40 days since last order vs 32-day median). Account has 28 lifetime orders (minimum: 3). Not a seasonal buyer. No active play. Enrolled.', whyFacts: ['Lifetime orders: 28', 'Median interval: 32d', 'Days since order: 40', 'Seasonal: no'] },
+      { id: 7, action: 'Promoted to L3', play: 'Pre-Lapse', detail: 'Earned auto-send: 34 approvals, 91% approved as-is, 0 factual errors', time: 'Aug 10, 12:00 PM', dotStyle: 'background: var(--ink-300);', whyText: 'Rep Dana met the L2→L3 promotion criteria for Pre-Lapse: ≥30 approvals (34), ≥80% approved without edits (91%), 0 factual errors, 0 escapes. Promotion was offered and accepted by Dana.', whyFacts: ['Approvals: 34', 'As-is rate: 91%', 'Factual errors: 0', 'Accepted: Aug 10'] },
+    ];
+    return items.map(it => ({
+      ...it,
+      showWhy: !!expanded[it.id],
+      onWhy: () => toggle(it.id),
+    }));
+  }
+
+  makeEmail(key) {
+    const e = {
+      jenna: '<p>Hi Jenna,</p><p>Thanks for reaching out about our brass pendant line. We have a strong selection available right now:</p><p style="padding:12px 16px; border-left:2px solid var(--border-default); margin:12px 0; background:var(--ink-50);"><strong>Arden Pendant — Brass</strong> · SKU <span style="font-family:var(--font-mono);font-size:12px">BW-ARD-BR-01</span><br>Wholesale: <span style="font-weight:500">$68.00</span> · MOQ: 6 units · In stock: 142 units<br><br><strong>Harlow Pendant — Aged Brass</strong> · SKU <span style="font-family:var(--font-mono);font-size:12px">BW-HRL-AB-01</span><br>Wholesale: <span style="font-weight:500">$82.00</span> · MOQ: 6 units · In stock: 87 units</p><p>I\'d be happy to put together a formal quote if any of these catch your eye. We also offer free freight on orders over $2,500.</p><p>Best,<br>Dana Chen<br>Brightwater Lighting Co.</p>',
+      amara: '<p>Hi Amara,</p><p>Welcome to Brightwater Lighting! I saw your wholesale application come through and wanted to introduce myself.</p><p>We specialize in residential and hospitality lighting — pendants, sconces, table lamps and floor lamps across modern, transitional and coastal styles. A few of our bestsellers:</p><p style="padding:12px 16px; border-left:2px solid var(--border-default); margin:12px 0; background:var(--ink-50);"><strong>Aster Table Lamp — Brass</strong> · From <span style="font-weight:500">$42.00</span><br><strong>Arden Pendant — Brass</strong> · From <span style="font-weight:500">$68.00</span><br><strong>Riviera Wall Sconce</strong> · From <span style="font-weight:500">$54.00</span></p><p>I\'d love to learn more about your shop and what you\'re looking for. Would you have time for a quick call this week?</p><p>Best,<br>Dana Chen<br>Brightwater Lighting Co.</p>',
+      marcus: '<p>Hi Marcus,</p><p>Just circling back on your quote for the Aster Table Lamp collection. Here\'s a quick summary:</p><p style="padding:12px 16px; border-left:2px solid var(--border-default); margin:12px 0; background:var(--ink-50);"><strong>Quote #Q-4821</strong> · Created Sep 21<br>24× Aster Table Lamp — Brass @ <span style="font-weight:500">$42.00</span> each<br>Subtotal: <span style="font-weight:500">$1,008.00</span> · Free freight (over $500 threshold)</p><p>This quote is valid through Oct 5. Want me to convert it to an order, or would you like to adjust quantities?</p><p>Best,<br>Dana Chen<br>Brightwater Lighting Co.</p>',
+      tom: '<p>Hi Tom,</p><p>It\'s been about 8 weeks since your last order — a bit longer than your usual pace. Your go-to items are in stock and ready to ship:</p><p style="padding:12px 16px; border-left:2px solid var(--border-default); margin:12px 0; background:var(--ink-50);"><strong>Riviera Wall Sconce — Brushed Nickel</strong> · Last ordered: 12 units<br>In stock: 64 units · Lead time: ships same day<br><br><strong>Riviera Wall Sconce — Matte Black</strong> · Last ordered: 8 units<br>In stock: 38 units · Lead time: ships same day</p><p>I can put together your usual order if you\'d like — just say the word.</p><p>Best,<br>Dana Chen<br>Brightwater Lighting Co.</p>',
+      nina: '<p>Hi Nina,</p><p>Based on your order history, it looks like you\'re about due for a restock on the Meridian Floor Lamp:</p><p style="padding:12px 16px; border-left:2px solid var(--border-default); margin:12px 0; background:var(--ink-50);"><strong>Meridian Floor Lamp — Walnut</strong> · SKU <span style="font-family:var(--font-mono);font-size:12px">BW-MRD-WN-FL</span><br>Your usual qty: 6 units · Wholesale: <span style="font-weight:500">$124.00</span><br>In stock: 29 units · Ships in 1–2 business days</p><p>Want me to set up the same order? Happy to adjust quantities if your needs have changed.</p><p>Best,<br>Dana Chen<br>Brightwater Lighting Co.</p>',
+      greg: '<p>Hi Greg,</p><p>Your outdoor lighting quote from last week is still open — wanted to make sure it didn\'t slip through the cracks:</p><p style="padding:12px 16px; border-left:2px solid var(--border-default); margin:12px 0; background:var(--ink-50);"><strong>Quote #Q-4799</strong> · Created Sep 20<br>12× Coastal Path Light — Bronze @ <span style="font-weight:500">$36.00</span><br>8× Harbor Post Lamp — Black @ <span style="font-weight:500">$95.00</span><br>Subtotal: <span style="font-weight:500">$1,192.00</span></p><p>Let me know if you\'d like to move forward or if anything needs adjusting.</p><p>Best,<br>Dana Chen<br>Brightwater Lighting Co.</p>',
+      pat: '<p>Hi Pat,</p><p>It\'s been about 7 months since your last order with us and I wanted to check in. We\'ve added some new collections since we last worked together:</p><p style="padding:12px 16px; border-left:2px solid var(--border-default); margin:12px 0; background:var(--ink-50);"><strong>New for Fall 2026:</strong><br>· Solstice Collection — 12 pieces, modern minimalist<br>· Driftwood Collection — 8 pieces, coastal organic<br>· Updated Meridian series with new finishes</p><p>We\'d love to get you set up again. As a returning customer, your first reorder ships free regardless of size.</p><p>Best,<br>Dana Chen<br>Brightwater Lighting Co.</p>',
+    };
+    return e[key] || '<p>Draft email content</p>';
+  }
+
+  icon(name) {
+    const icons = {
+      home: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 8.5L10 3l7 5.5V16a1 1 0 01-1 1H4a1 1 0 01-1-1V8.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 17v-5h4v5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+      plays: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 3v14l10-7L7 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+      inbox: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="14" height="12" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M3 8l7 4 7-4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+      handoffs: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      accounts: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M4 17c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+      settings: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M10 2v3M10 15v3M2 10h3M15 10h3M4.2 4.2l2.1 2.1M13.7 13.7l2.1 2.1M4.2 15.8l2.1-2.1M13.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+      digest: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="3" width="12" height="14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 7h6M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+    };
+    return icons[name] || '';
+  }
+}
+</script>
+</body>
+</html>
