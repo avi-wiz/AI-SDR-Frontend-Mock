@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WizSDR Prototype</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "General Sans", system-ui, sans-serif; background: #FAFAF9; height: 100vh; display: flex; flex-direction: column; }
+  .persona-bar { display: flex; align-items: center; gap: 0; background: #0A0A09; padding: 0 16px; height: 40px; flex-shrink: 0; }
+  .persona-btn { padding: 8px 20px; background: none; border: none; color: #8A857C; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; transition: color 120ms, border-color 120ms; }
+  .persona-btn:hover { color: #DBD8D2; }
+  .persona-btn.active { color: #FFFFFF; border-bottom-color: #FE7630; }
+  .persona-label { font-family: "Geist Mono", monospace; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #5E5A53; margin-right: 12px; }
+  iframe { flex: 1; border: none; width: 100%; }
+</style>
+</head>
+<body>
+<div class="persona-bar">
+  <span class="persona-label">Persona</span>
+  <button class="persona-btn active" onclick="switchTo('rep', this)">Sales Rep (Dana)</button>
+  <button class="persona-btn" onclick="switchTo('admin', this)">Admin (Jordan)</button>
+  <button class="persona-btn" onclick="switchTo('simulator', this)">Simulator</button>
+</div>
+<iframe id="view" src="WizCRM Sales Agents.dc.html"></iframe>
+<script>
+const files = {
+  rep: 'WizCRM Sales Agents.dc.html',
+  admin: 'WizSDR Admin.dc.html',
+  simulator: 'WizSDR Simulator.dc.html'
+};
+function switchTo(persona, btn) {
+  document.getElementById('view').src = files[persona];
+  document.querySelectorAll('.persona-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  location.hash = persona;
+}
+// Restore from hash
+const hash = location.hash.replace('#', '');
+if (hash && files[hash]) {
+  document.getElementById('view').src = files[hash];
+  document.querySelectorAll('.persona-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase().includes(hash === 'rep' ? 'sales' : hash));
+  });
+}
+</script>
+</body>
+</html>
