@@ -74,13 +74,11 @@
     </sc-if>
     <div style="width: 1px; height: 24px; background: var(--ink-700);"></div>
     <!-- Persona -->
-    <button style="display: flex; align-items: center; gap: 8px; background: none; border: none; color: var(--ink-0); cursor: pointer; padding: 4px 8px; font-family: var(--font-sans); font-size: 13px;"
-            style-hover="background: var(--ink-800);"
-            onClick="{{ togglePersonaMenu }}">
+    <div style="display: flex; align-items: center; gap: 8px; padding: 4px 8px; font-family: var(--font-sans); font-size: 13px; color: var(--ink-0);">
       <div style="width: 28px; height: 28px; background: var(--wiz-orange-600); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px; color: var(--ink-900);">DC</div>
       <span>Dana Chen</span>
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+      <span style="padding: 2px 6px; font-family: var(--font-mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; background: var(--ink-700); color: var(--ink-300);">Rep</span>
+    </div>
   </header>
 
   <div style="display: flex; flex: 1; overflow: hidden;">
@@ -982,6 +980,23 @@
               <div style="padding: 24px;">
                 {{ selectedDraft.emailBody }}
               </div>
+              <!-- Previous thread -->
+              <sc-if value="{{ selectedDraft.hasThread }}" hint-placeholder-val="{{ false }}">
+                <div style="padding: 16px 24px; border-top: 1px solid var(--border-subtle); background: var(--ink-50);">
+                  <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 12px;">Previous in this thread</div>
+                  <sc-for list="{{ selectedDraft.thread }}" as="prev" hint-placeholder-count="1">
+                    <div style="display: flex; {{ prev.alignment }}; margin-bottom: 8px;">
+                      <div style="border: 1px solid var(--border-subtle); background: var(--ink-0); max-width: 85%; {{ prev.bgStyle }}">
+                        <div style="padding: 10px 16px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; gap: 12px;">
+                          <div style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted);">{{ prev.from }} · {{ prev.date }}</div>
+                          <span style="padding: 2px 8px; border: 1px solid var(--border-default); font-family: var(--font-sans); font-size: 10px; color: var(--text-muted); flex-shrink: 0;">{{ prev.status }}</span>
+                        </div>
+                        <div style="padding: 12px 16px;">{{ prev.body }}</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
               <!-- Claim sources bar -->
               <div style="padding: 12px 24px; border-top: 1px solid var(--border-subtle); background: var(--ink-50);">
                 <div style="font-family: var(--font-mono); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;">Data sources used</div>
@@ -1101,8 +1116,47 @@ class Component extends DCLogic {
       onSelect: () => this.setState({ selectedInboxIdx: d.id }),
     }));
     const sel = allInboxDrafts.find(d => d.id === selectedInboxIdx) || allInboxDrafts[0];
+    const buyerAlign = 'justify-content: flex-start;';
+    const agentAlign = 'justify-content: flex-end;';
+    const buyerBg = '';
+    const agentBg = 'background: var(--ink-50);';
+    const threadData = {
+      0: [
+        { from: 'Jenna Whitfield', date: 'Sep 28, 8:42 AM', status: 'Buyer reply', alignment: buyerAlign, bgStyle: buyerBg,
+          body: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '13px', lineHeight: '1.5', color: 'var(--text-secondary)' } },
+            React.createElement('p', { style: { margin: '0 0 8px' } }, 'Hi Dana,'),
+            React.createElement('p', { style: { margin: '0 0 8px' } }, 'Thanks for the quick response! The brass pendants look great. Do you have anything in a larger size — around 18" diameter? We\'re fitting out a restaurant dining room and need something with more presence.'),
+            React.createElement('p', { style: { margin: '0' } }, 'Jenna')
+          ) },
+        { from: 'Dana Chen (Agent)', date: 'Sep 28, 8:05 AM', status: 'Sent (auto, L2)', alignment: agentAlign, bgStyle: agentBg,
+          body: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '13px', lineHeight: '1.5', color: 'var(--text-secondary)' } },
+            React.createElement('p', { style: { margin: '0 0 8px' } }, 'Hi Jenna,'),
+            React.createElement('p', { style: { margin: '0 0 8px' } }, 'Welcome to Brightwater Lighting! I saw your wholesale inquiry come through and wanted to reach out right away.'),
+            React.createElement('p', { style: { margin: '0 0 8px' } }, 'We carry a full range of brass pendants, sconces, and table lamps. I\'d love to learn more about what you\'re looking for — are you fitting out a retail space or working on a hospitality project?'),
+            React.createElement('p', { style: { margin: '0' } }, 'Best, Dana')
+          ) },
+      ],
+      1: [
+        { from: 'Amara Osei', date: 'Sep 28, 8:15 AM', status: 'Buyer reply', alignment: buyerAlign, bgStyle: buyerBg,
+          body: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '13px', lineHeight: '1.5', color: 'var(--text-secondary)' } },
+            React.createElement('p', { style: { margin: '0 0 8px' } }, 'Hi Dana,'),
+            React.createElement('p', { style: { margin: '0 0 8px' } }, 'Thanks for reaching out! We\'re a new home décor boutique in Savannah, opening in November. Really interested in your coastal and transitional lines — especially table lamps and smaller pendants.'),
+            React.createElement('p', { style: { margin: '0 0 8px' } }, 'What are your opening order minimums? And do you offer any setup support for new retailers?'),
+            React.createElement('p', { style: { margin: '0' } }, 'Amara')
+          ) },
+        { from: 'Dana Chen (Agent)', date: 'Sep 28, 7:50 AM', status: 'Sent (auto, L2)', alignment: agentAlign, bgStyle: agentBg,
+          body: React.createElement('div', { style: { fontFamily: 'var(--font-sans)', fontSize: '13px', lineHeight: '1.5', color: 'var(--text-secondary)' } },
+            React.createElement('p', { style: { margin: '0 0 8px' } }, 'Hi Amara,'),
+            React.createElement('p', { style: { margin: '0 0 8px' } }, 'Welcome to Brightwater Lighting! I noticed your wholesale application and wanted to introduce myself. We specialize in residential and hospitality lighting — I think our coastal collection would be a great fit.'),
+            React.createElement('p', { style: { margin: '0 0 8px' } }, 'Would you have time for a quick call this week to chat about what you\'re looking for?'),
+            React.createElement('p', { style: { margin: '0' } }, 'Best, Dana')
+          ) },
+      ],
+    };
     const selectedDraft = sel ? {
       ...sel,
+      hasThread: !!threadData[sel.id],
+      thread: threadData[sel.id] || [],
       emailBody: React.createElement('div', { dangerouslySetInnerHTML: { __html: this.makeEmail(sel.emailKey) }, style: { fontFamily: 'var(--font-sans)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' } }),
     } : null;
     const inboxFilters = [
